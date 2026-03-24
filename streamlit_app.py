@@ -1,155 +1,86 @@
 import streamlit as st
 
-# 1. SETUP DE ELITE
+# 1. CONFIGURAÇÃO DE ALTA CONVERSÃO
 st.set_page_config(
-    page_title="MuseIA Digital | Central de Inteligência",
+    page_title="MuseIA Digital | Central de Agentes",
     page_icon="🟣",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# --- CSS PERSONALIZADO (MUSEIA HIGH-TECH) ---
+# --- DESIGN SYSTEM MUSEIA (FOCO EM CREDIBILIDADE E MOBILE) ---
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap');
-
-    .stApp {
-        background-color: #0A0A0B;
-        color: #F8F9FA;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    /* Esconder elementos padrão */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+    
+    .stApp { background-color: #080808; color: #FFFFFF; font-family: 'Plus Jakarta Sans', sans-serif; }
     #MainMenu, footer, header {visibility: hidden;}
 
-    /* Título MuseIA - Tipografia Forte */
-    .logo-museia {
-        font-size: 62px;
-        font-weight: 800;
-        background: -webkit-linear-gradient(#FFFFFF, #8A2BE2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: -2px;
-        text-align: center;
-        margin-top: 50px;
-    }
+    /* Seção Hero */
+    .hero-container { text-align: center; padding: 40px 10px; background: radial-gradient(circle at top, #1a1a1a 0%, #080808 100%); }
+    .logo-museia { font-size: 28px; font-weight: 800; color: #8A2BE2; letter-spacing: -1px; margin-bottom: 20px; }
+    .headline { font-size: 38px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; background: linear-gradient(90deg, #FFF, #BBB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sub-headline { font-size: 18px; color: #A0A0A0; margin-bottom: 30px; line-height: 1.4; }
 
-    .tagline {
-        text-align: center;
-        color: #A0A0A0; /* Cor corrigida para leitura clara */
-        font-size: 20px;
-        font-weight: 300;
-        margin-bottom: 50px;
-    }
+    /* Estilo de Vídeo/Imagem */
+    .video-placeholder { width: 100%; max-width: 700px; height: 350px; background: #111; border: 1px solid #333; border-radius: 12px; margin: 0 auto 30px auto; display: flex; align-items: center; justify-content: center; color: #444; }
 
-    /* Carrossel de Ofertas (Simulado com Estilo) */
-    .highlight-box {
-        background: linear-gradient(90deg, #161618 0%, #1D1D20 100%);
-        border: 1px solid #2D2D30;
-        border-radius: 16px;
-        padding: 40px;
-        text-align: left;
-        margin-bottom: 40px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
+    /* Preço e Garantia */
+    .price-tag { font-size: 22px; font-weight: 700; color: #FFF; margin-bottom: 5px; }
+    .garantia-text { font-size: 14px; color: #00FF7F; font-weight: 400; margin-bottom: 30px; }
 
-    /* Input de E-mail / Token Estilizado */
-    .stTextInput input {
-        background-color: #161618 !important;
-        border: 1px solid #333 !important;
-        color: white !important;
-        padding: 15px !important;
-        border-radius: 8px !important;
-        font-size: 16px !important;
-    }
+    /* Benefícios (Grid Mobile Friendly) */
+    .benefit-card { background: #121212; border: 1px solid #222; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+    .benefit-icon { font-size: 30px; margin-bottom: 10px; }
+    .benefit-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #8A2BE2; }
+    .benefit-desc { font-size: 14px; color: #808080; }
 
-    /* Botão CTA Magnético */
+    /* Botão CTA Gigante */
     div.stButton > button {
-        background: #8A2BE2 !important; /* Roxo MuseIA */
+        background: linear-gradient(180deg, #9D4EDD 0%, #7B2CBF 100%) !important;
         color: white !important;
         border: none !important;
-        padding: 20px 40px !important;
-        border-radius: 8px !important;
-        font-weight: 700 !important;
-        font-size: 18px !important;
-        text-transform: uppercase;
-        width: 100%;
-        transition: 0.4s all;
-    }
-    div.stButton > button:hover {
-        background: #7A1FC2 !important;
-        box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
-        transform: translateY(-2px);
-    }
-
-    /* Grid de Agentes */
-    .card-agente {
-        background: #161618;
-        border: 1px solid #2D2D30;
-        padding: 30px;
-        border-radius: 12px;
-        height: 250px;
-        transition: 0.3s;
-    }
-    .card-agente:hover {
-        border-color: #8A2BE2;
-        background: #1D1D20;
+        padding: 25px !important;
+        border-radius: 12px !important;
+        font-size: 20px !important;
+        font-weight: 800 !important;
+        width: 100% !important;
+        box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 2. LÓGICA DE ESTADO
-if "logado" not in st.session_state:
-    st.session_state["logado"] = False
-if "agente" not in st.session_state:
-    st.session_state["agente"] = None
+# --- SEÇÃO 1: HERO ---
+st.markdown('<div class="hero-container">', unsafe_allow_html=True)
+st.markdown('<div class="logo-museia">MUSEIA DIGITAL</div>', unsafe_allow_html=True)
+st.markdown('<h1 class="headline">Biblioteca de Agentes Inteligentes</h1>', unsafe_allow_html=True)
+st.markdown('<p class="sub-headline">Automatize tarefas e multiplique sua produtividade com IA — sem ser técnico.</p>', unsafe_allow_html=True)
 
-# --- PÁGINA DE ENTRADA (OFERTA E ACESSO) ---
-if not st.session_state["logado"]:
-    st.markdown('<h1 class="logo-museia">MuseIA Digital</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="tagline">Inteligência de Mercado e Automação de Alto Impacto.</p>', unsafe_allow_html=True)
-    
-    # Simulação de Carrossel de Ofertas
-    st.markdown("""
-    <div class="highlight-box">
-        <span style="color: #8A2BE2; font-weight: bold; text-transform: uppercase; font-size: 12px;">Destaque da Semana</span>
-        <h2 style="margin: 10px 0;">Deep Scan Agente 04</h2>
-        <p style="color: #B0B0B0; font-size: 16px;">Analise seus concorrentes em segundos e descubra brechas de mercado invisíveis a olho nu.</p>
-    </div>
-    """, unsafe_allow_html=True)
+# Player de Vídeo ou Imagem de Destaque
+st.markdown('<div class="video-placeholder">VÍDEO DE APRESENTAÇÃO (60s)</div>', unsafe_allow_html=True)
 
-    # Campo de Entrada Estratégico
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        email_acesso = st.text_input("", placeholder="Insira seu e-mail ou token de acesso")
-        if st.button("ATIVAR MINHA INTELIGÊNCIA"):
-            if email_acesso: # Lógica de validação virá da pasta CORE
-                st.session_state["logado"] = True
-                st.rerun()
-            else:
-                st.error("Por favor, insira uma credencial válida.")
-    st.stop()
+st.markdown('<div class="price-tag">R$ 79,90/mês</div>', unsafe_allow_html=True)
+st.markdown('<div class="garantia-text">🛡️ 7 dias de garantia | Cancele quando quiser</div>', unsafe_allow_html=True)
 
-# --- ÁREA INTERNA (CATÁLOGO DE PRODUTOS) ---
-if st.session_state["agente"] is None:
-    st.markdown('<h1 style="font-size: 40px; margin-bottom: 30px;">Sua Central de Comando</h1>', unsafe_allow_html=True)
-    
-    col_a, col_b, col_c = st.columns(3)
-    
-    with col_a:
-        st.markdown('<div class="card-agente"><h3>🏆 Deep Scan</h3><p style="color:#808080">Raio-x de concorrência e propostas de valor.</p></div>', unsafe_allow_html=True)
-        if st.button("Abrir Deep Scan"): st.session_state["agente"] = "04"; st.rerun()
+if st.button("QUERO ACESSO IMEDIATO"):
+    st.session_state["checkpoint"] = "checkout" # Próximo passo: CORE/pagamentos.py
 
-    with col_b:
-        st.markdown('<div class="card-agente"><h3>📑 Filtro CV</h3><p style="color:#808080">Triagem automatizada de talentos por competência.</p></div>', unsafe_allow_html=True)
-        if st.button("Abrir Filtro"): st.session_state["agente"] = "31"; st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
 
-    with col_c:
-        st.markdown('<div class="card-agente"><h3>📧 Humanizador</h3><p style="color:#808080">Otimização de comunicação para conversão.</p></div>', unsafe_allow_html=True)
-        if st.button("Abrir Humanizador"): st.session_state["agente"] = "13"; st.rerun()
+st.divider()
 
-else:
-    if st.button("← VOLTAR PARA CENTRAL"):
-        st.session_state["agente"] = None
-        st.rerun()
-    st.write(f"### Módulo {st.session_state['agente']} em operação...")
+# --- SEÇÃO 2: 3 BENEFÍCIOS ---
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""<div class="benefit-card">
+        <div class="benefit-icon">⚡</div>
+        <div class="benefit-title">EM 5 MINUTOS</div>
+        <div class="benefit-desc">Agentes prontos para usar. Copie, cole e implemente hoje mesmo.</div>
+    </div>""", unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""<div class="benefit-card">
+        <div class="benefit-icon">🔄</div>
+        <div class="benefit-title">ATUALIZAÇÕES</div>
+        <div class="benefit-desc">Novos agentes todo mês na sua central,
