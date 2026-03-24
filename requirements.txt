@@ -1,5 +1,5 @@
-Plaintext
 streamlit
-groq
+requests
+pandas
 beautifulsoup4
-httpx
+pdfplumber
