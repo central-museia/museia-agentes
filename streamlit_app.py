@@ -1,4 +1,5 @@
 import streamlit as st
+from nocodb.catalogo import obter_catalogo
 
 st.set_page_config(page_title="MuseIA", layout="wide")
 
@@ -31,6 +32,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- HERO ---
+st.image("assets/logo.png", width=180)
 st.markdown('<div class="big-title">MuseIA</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub">A inteligência humana que controla a IA</div>', unsafe_allow_html=True)
 
@@ -51,7 +53,7 @@ colecoes = {
     "Financeiro & Cobrança": "#22C55E"
 }
 
-# --- MULTISELECT COM KEY ---
+# --- MULTISELECT ---
 selecionadas = st.multiselect(
     "Selecione suas coleções:",
     list(colecoes.keys()),
@@ -59,41 +61,61 @@ selecionadas = st.multiselect(
     key="multiselect_colecoes"
 )
 
-# --- ATUALIZA ESTADO ---
 st.session_state.colecoes = selecionadas
 
 st.divider()
 
-# --- EXIBIÇÃO ---
+# =========================================
+# 📦 EXIBIÇÃO DE AGENTES (NOVO)
+# =========================================
+
+catalogo = obter_catalogo()
+
 if st.session_state.colecoes:
 
-    st.subheader("📦 Sua estrutura escolhida:")
+    st.subheader("🎬 Agentes disponíveis:")
 
-    cols = st.columns(3)
+    cols = st.columns(4)
 
-    for i, nome in enumerate(st.session_state.colecoes):
-        with cols[i % 3]:
-            st.markdown(
-                f'<div class="card" style="background:{colecoes[nome]}">{nome}</div>',
-                unsafe_allow_html=True
-            )
+    for i, agente in enumerate(catalogo):
 
-    st.divider()
+        # filtro por coleção
+        if agente["colecoes"]:
+            nomes_colecao = st.session_state.colecoes
+            if not any(c in agente["colecoes"] for c in nomes_colecao):
+                continue
 
-    st.header("🚀 Agora sim, você está jogando sério.")
+        with cols[i % 4]:
 
-    col1, col2 = st.columns(2)
+            # IMAGEM (COM FALLBACK)
+            if agente.get("imagem"):
+                st.image(agente["imagem"])
+            else:
+                st.image("assets/logo.png")
 
-    with col1:
-        if st.button("🔥 Ativar minha estrutura"):
-            st.success("Sistema ativado. Você desbloqueou outro nível.")
+            st.markdown(f"**{agente['nome']}**")
+            st.caption(agente["codigo"])
 
-    with col2:
-        if st.button("🧠 Montar solução completa"):
-            st.info("Você não está comprando. Está construindo vantagem.")
+            if st.button("🚀 Usar agente", key=agente["codigo"]):
+                st.success(f"{agente['nome']} ativado")
 
 else:
     st.warning("⚠️ Escolha pelo menos uma coleção para avançar.")
+
+# --- CTA FINAL ---
+st.divider()
+
+st.header("🚀 Agora sim, você está jogando sério.")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("🔥 Ativar minha estrutura"):
+        st.success("Sistema ativado. Você desbloqueou outro nível.")
+
+with col2:
+    if st.button("🧠 Montar solução completa"):
+        st.info("Você não está comprando. Está construindo vantagem.")
 
 # --- FAQ ---
 st.divider()
@@ -111,10 +133,6 @@ with st.expander("Preciso saber usar IA?"):
 with st.expander("É imediato?"):
     st.write("Sim. Entrou, começou.")
 
-with st.expander("É imediato?"):
-    st.write("Sim. Entrou, começou.")
-
 # --- FOOTER ---
 st.markdown("---")
 st.markdown("MuseIA © 2026 — Inteligência aplicada que gera resultado.")
-
