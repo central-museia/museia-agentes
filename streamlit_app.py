@@ -1,159 +1,120 @@
-from flask import Flask
+import streamlit as st
 
-app = Flask(__name__)
+st.set_page_config(page_title="MuseIA", layout="wide")
 
-@app.route("/")
-def home():
-    return """
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>MuseIA</title>
+# --- ESTADO ---
+if "colecoes" not in st.session_state:
+    st.session_state.colecoes = []
 
+# --- ESTILO ---
+st.markdown("""
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #ffffff;
-    max-width: 700px;
-    margin: auto;
-    padding: 20px;
-    color: #111;
-}
-
-h1 {
-    font-size: 28px;
-}
-
-.subtitle {
-    color: #555;
-    margin-bottom: 20px;
-}
-
-.price {
-    font-size: 26px;
+.big-title {
+    font-size: 60px;
     font-weight: bold;
-    margin: 20px 0;
+    text-align: center;
 }
-
-button {
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    background: black;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    margin-top: 10px;
-    cursor: pointer;
+.sub {
+    text-align: center;
+    font-size: 20px;
+    opacity: 0.7;
 }
-
-button:hover {
-    opacity: 0.9;
-}
-
-.section {
-    margin-top: 40px;
-}
-
-ul {
-    padding-left: 20px;
-}
-
-hr {
-    margin: 40px 0;
+.card {
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+    font-weight:bold;
+    margin:10px;
+    color:white;
 }
 </style>
+""", unsafe_allow_html=True)
 
-</head>
-<body>
+# --- HERO ---
+st.markdown('<div class="big-title">MuseIA</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub">A inteligência humana que controla a IA</div>', unsafe_allow_html=True)
 
-<h1>Novos Agentes de Automação disponíveis</h1>
-<div class="subtitle">Implemente IA generativa no seu dia</div>
+st.divider()
 
-<hr>
+st.header("🔥 Escolha sua transformação:")
 
-<input type="text" placeholder="O que você está procurando?" style="width:100%; padding:10px;">
+colecoes = {
+    "Produtividade Administrativa": "#14B8A6",
+    "Atendimento & Recepção": "#0EA5E9",
+    "Clínicas e Consultórios": "#2563EB",
+    "Salões e Estética": "#F97316",
+    "Planejamento & Operações": "#1D4ED8",
+    "Vendas & Prospecção": "#16A34A",
+    "Marketing & Conteúdo": "#84CC16",
+    "Recursos Humanos": "#9333EA",
+    "Suporte ao Cliente": "#7C3AED",
+    "Financeiro & Cobrança": "#22C55E"
+}
 
-<hr>
+# --- MULTISELECT COM KEY ---
+selecionadas = st.multiselect(
+    "Selecione suas coleções:",
+    list(colecoes.keys()),
+    default=st.session_state.colecoes,
+    key="multiselect_colecoes"
+)
 
-<p>
-Pare de perder tempo com tarefas repetitivas.  
-Use automações simples e recupere horas do seu dia com a MuseIA.
-</p>
+# --- ATUALIZA ESTADO ---
+st.session_state.colecoes = selecionadas
 
-<button>Comece agora gratuitamente</button>
+st.divider()
 
-<hr>
+# --- EXIBIÇÃO ---
+if st.session_state.colecoes:
 
-<h2>Kit Inicial MuseIA</h2>
+    st.subheader("📦 Sua estrutura escolhida:")
 
-<p>
-Seu primeiro passo para automatizar seu dia sem precisar entender tecnologia.
-</p>
+    cols = st.columns(3)
 
-<ul>
-<li>Organize tarefas automaticamente</li>
-<li>Responda mensagens com mais agilidade</li>
-<li>Evite esquecimentos e retrabalho</li>
-<li>Ganhe tempo no seu dia</li>
-</ul>
+    for i, nome in enumerate(st.session_state.colecoes):
+        with cols[i % 3]:
+            st.markdown(
+                f'<div class="card" style="background:{colecoes[nome]}">{nome}</div>',
+                unsafe_allow_html=True
+            )
 
-<div class="price">R$ 69,90</div>
+    st.divider()
 
-<button>Comprar agora</button>
+    st.header("🚀 Agora sim, você está jogando sério.")
 
-<hr>
+    col1, col2 = st.columns(2)
 
-<p>
-Pare de perder tempo com tarefas repetitivas.  
-Use automações simples e recupere horas do seu dia com a MuseIA.
-</p>
+    with col1:
+        if st.button("🔥 Ativar minha estrutura"):
+            st.success("Sistema ativado. Você desbloqueou outro nível.")
 
-<button>Simplificar meu dia agora</button>
+    with col2:
+        if st.button("🧠 Montar solução completa"):
+            st.info("Você não está comprando. Está construindo vantagem.")
 
-<hr>
+else:
+    st.warning("⚠️ Escolha pelo menos uma coleção para avançar.")
 
-<h3>Por que usar a MuseIA?</h3>
+# --- FAQ ---
+st.divider()
+st.header("❓ Dúvidas Frequentes")
 
-<ul>
-<li>Assinatura mensal</li>
-<li>Central de Agentes MuseIA</li>
-<li>Aceleração de Vendas</li>
-<li>Inteligência de Dados</li>
-<li>Gestão de Pessoas & Feedback</li>
-<li>Consistência de Marca</li>
-</ul>
+with st.expander("Isso é só mais uma IA?"):
+    st.write("Não. É execução estratégica com inteligência.")
 
-<hr>
+with st.expander("Funciona pra qualquer negócio?"):
+    st.write("Sim. Se precisa crescer, funciona.")
 
-<h3>Perguntas frequentes</h3>
+with st.expander("Preciso saber usar IA?"):
+    st.write("Não. A MuseIA já pensa por você.")
 
-<p><strong>1. O que é a MuseIA Digital?</strong><br>
-Central de agentes de automação com instruções práticas.</p>
+with st.expander("É imediato?"):
+    st.write("Sim. Entrou, começou.")
 
-<p><strong>2. Quanto custa?</strong><br>
-R$ 69,90. Assinatura futura: R$ 79,90/mês.</p>
+with st.expander("É imediato?"):
+    st.write("Sim. Entrou, começou.")
 
-<p><strong>3. Onde posso usar?</strong><br>
-No seu dia a dia, vendas e organização.</p>
+# --- FOOTER ---
+st.markdown("---")
+st.markdown("MuseIA © 2026 — Inteligência aplicada que gera resultado.")
 
-<p><strong>4. Posso cancelar?</strong><br>
-Sim.</p>
-
-<hr>
-
-<p style="color:#777;">
-Home • Central de Automação • Sobre a MuseIA
-</p>
-
-<p style="color:#777;">
-Desenvolvido por MuseIA © 2026
-</p>
-
-</body>
-</html>
-"""
-
-if __name__ == "__main__":
-    app.run(debug=True)
