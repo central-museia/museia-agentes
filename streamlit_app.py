@@ -4,6 +4,10 @@ st.set_page_config(page_title="MuseIA Digital", layout="wide")
 
 # ===== ESTILO =====
 st.markdown("""
+## 🚀 Central de Automação com IA
+
+Acesse agentes prontos para gerar resultados reais no seu negócio.
+""")
 <style>
 body { background-color: #0f172a; }
 .card {
