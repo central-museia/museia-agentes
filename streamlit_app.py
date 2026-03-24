@@ -1,165 +1,131 @@
 import streamlit as st
 
-st.set_page_config(page_title="MuseIA", layout="wide")
+st.set_page_config(page_title="MuseIA", layout="centered")
 
-# --- ESTILO ---
+# --- CSS LIMPO (ESTILO LOJA) ---
 st.markdown("""
 <style>
-.main-title {
-    font-size: 48px;
+.block-container {
+    max-width: 700px;
+}
+h1 {
+    font-size: 32px;
+}
+.price {
+    font-size: 28px;
     font-weight: bold;
 }
-.subtitle {
-    font-size: 20px;
-    opacity: 0.7;
-}
-.cta button {
-    height: 60px !important;
-    font-size: 18px !important;
-    border-radius: 10px !important;
-}
-.section {
-    margin-top: 40px;
-}
-.box {
-    padding: 20px;
-    border-radius: 12px;
-    background-color: #111827;
+.buy-btn button {
+    width: 100%;
+    height: 55px;
+    font-size: 18px;
+    border-radius: 8px;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# --- HERO ---
-st.markdown('<div class="main-title">Novos Agentes de Automação disponíveis</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Implemente IA generativa no seu dia</div>', unsafe_allow_html=True)
+# --- TÍTULO ---
+st.title("Novos Agentes de Automação disponíveis")
+st.caption("Implemente IA generativa no seu dia")
 
 st.divider()
 
-# --- BUSCA / PROBLEMA ---
-st.subheader("🔍 O que você está procurando?")
-
-busca = st.text_input("Ex: automatizar atendimento, vender mais, organizar tarefas...")
+# --- BUSCA (igual vibe Payhip simples) ---
+st.text_input("O que você está procurando?")
 
 st.divider()
 
-# --- PROPOSTA ---
-st.markdown("""
-Pare de perder tempo com tarefas repetitivas.  
+# --- COPY DIRETA ---
+st.write("""
+Pare de perder tempo com tarefas repetitivas.
+
 Use automações simples e recupere horas do seu dia com a MuseIA.
 """)
 
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("🚀 Começar gratuitamente"):
-        st.success("Você acabou de dar o primeiro passo.")
-
-with col2:
-    if st.button("⚡ Quero simplificar meu dia agora"):
-        st.info("Você está mais perto do que imagina.")
+# --- CTA PRINCIPAL ---
+if st.button("🚀 Comece agora gratuitamente"):
+    st.success("Você começou.")
 
 st.divider()
 
-# --- PRODUTO ---
-st.header("📦 Kit Inicial MuseIA")
+# --- PRODUTO (ESTILO PAYHIP) ---
+st.header("Kit Inicial MuseIA")
 
 st.markdown("""
 Seu primeiro passo para automatizar seu dia sem precisar entender tecnologia.
 
-✔ Organize tarefas automaticamente  
-✔ Responda mensagens com mais agilidade  
-✔ Evite esquecimentos e retrabalho  
-✔ Ganhe tempo no seu dia  
+- Organize tarefas automaticamente  
+- Responda mensagens com mais agilidade  
+- Evite esquecimentos e retrabalho  
+- Ganhe tempo no seu dia  
 """)
 
-col1, col2 = st.columns(2)
+# --- PREÇO DESTACADO ---
+st.markdown('<div class="price">R$ 69,90</div>', unsafe_allow_html=True)
 
-with col1:
-    if st.button("💥 Quero o Kit Inicial agora"):
-        st.success("Escolha inteligente. Vamos começar.")
+# --- BOTÃO DE COMPRA (PRINCIPAL) ---
+if st.button("💥 Comprar agora"):
+    st.success("Redirecionando para pagamento...")
 
-with col2:
-    if st.button("👀 Ver como funciona"):
-        st.info("Simples, direto e aplicável no seu dia.")
+st.caption("Produto digital. Acesso imediato após pagamento.")
 
 st.divider()
 
-# --- BENEFÍCIOS ---
-st.header("🔥 Por que usar a MuseIA?")
+# --- REPETIÇÃO (IGUAL PAYHIP) ---
+st.write("""
+Pare de perder tempo com tarefas repetitivas.
 
-cols = st.columns(3)
+Use automações simples e recupere horas do seu dia com a MuseIA.
+""")
 
-with cols[0]:
-    st.markdown("### 💰 Aceleração de Vendas")
-    st.write("Mais oportunidades, menos esforço manual.")
-
-with cols[1]:
-    st.markdown("### 📊 Inteligência de Dados")
-    st.write("Decisões com base real, não achismo.")
-
-with cols[2]:
-    st.markdown("### 🧠 Gestão de Pessoas & Feedback")
-    st.write("Organização e clareza no time.")
-
-cols2 = st.columns(2)
-
-with cols2[0]:
-    st.markdown("### 🎯 Consistência de Marca")
-    st.write("Comunicação alinhada sempre.")
-
-with cols2[1]:
-    st.markdown("### 🤖 Central de Agentes MuseIA")
-    st.write("Tudo em um só lugar.")
+if st.button("⚡ Simplificar meu dia agora"):
+    st.info("Você está a um passo.")
 
 st.divider()
 
-# --- PLANOS ---
-st.header("💳 Como funciona")
+# --- BENEFÍCIOS (LISTA SIMPLES, NÃO GRID) ---
+st.subheader("Por que usar a MuseIA?")
 
-st.markdown("""
-**Venda unitária:** R$ 69,90  
-**Assinatura mensal (em breve):** R$ 79,90/mês  
-
-Promoções podem aparecer a qualquer momento.
+st.write("""
+Assinatura mensal  
+Central de Agentes MuseIA  
+Aceleração de Vendas  
+Inteligência de Dados  
+Gestão de Pessoas & Feedback  
+Consistência de Marca  
 """)
-
-if st.button("🔥 Quero garantir meu acesso"):
-    st.success("Você está entrando na nova forma de trabalhar.")
 
 st.divider()
 
 # --- FAQ ---
-st.header("❓ Perguntas frequentes")
+st.subheader("Perguntas frequentes")
 
 with st.expander("1. O que é a MuseIA Digital?"):
-    st.write("Uma Central de Agentes de Automação com instruções práticas para você usar sozinho.")
+    st.write("Uma Central de Agentes de Automação com instruções práticas.")
 
 with st.expander("2. Quanto custa?"):
-    st.write("Venda unitária: R$ 69,90. Assinatura mensal prevista: R$ 79,90.")
+    st.write("R$ 69,90 ou assinatura futura de R$ 79,90.")
 
-with st.expander("3. Onde posso usar os agentes?"):
-    st.write("Em ferramentas do dia a dia como e-mail, atendimento, marketing e gestão.")
+with st.expander("3. Onde posso usar?"):
+    st.write("Em tarefas do dia a dia, vendas, marketing e organização.")
 
-with st.expander("4. Posso cancelar a assinatura?"):
-    st.write("Sim. Sem burocracia.")
+with st.expander("4. Posso cancelar?"):
+    st.write("Sim.")
 
 with st.expander("5. É seguro?"):
-    st.write("Sim. Seus dados e uso são protegidos.")
+    st.write("Sim.")
 
-with st.expander("6. Posso compartilhar meu acesso?"):
-    st.write("O ideal é uso individual para melhor desempenho.")
+with st.expander("6. Posso compartilhar?"):
+    st.write("Uso individual recomendado.")
 
-with st.expander("7. Preciso de suporte. Como faço?"):
-    st.write("Você terá canais de suporte disponíveis após a compra.")
+with st.expander("7. Preciso de suporte?"):
+    st.write("Sim, disponível após compra.")
 
-with st.expander("8. Posso denunciar conteúdos inadequados?"):
-    st.write("Sim. Prezamos pela qualidade da plataforma.")
+with st.expander("8. Posso denunciar conteúdo?"):
+    st.write("Sim.")
 
 st.divider()
 
-# --- FOOTER / MENU ---
-st.markdown("""
-Home | Central de Automação | Sobre a MuseIA
-""")
-
-st.markdown("MuseIA © 2026 — Inteligência aplicada que gera resultado.")
+# --- FOOTER ---
+st.caption("Home • Central de Automação • Sobre a MuseIA")
+st.caption("Desenvolvido por MuseIA © 2026")
