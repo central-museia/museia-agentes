@@ -1,72 +1,154 @@
 import streamlit as st
 
-# 1. CONFIGURAÇÃO DE ALTA CONVERSÃO
 st.set_page_config(
-    page_title="MuseIA Digital | Central de Agentes",
+    page_title="MuseIA Digital",
     page_icon="🟣",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# --- DESIGN SYSTEM MUSEIA (FOCO EM CREDIBILIDADE) ---
+# --- ESTILO ---
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
-    .stApp { background-color: #080808; color: #FFFFFF; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .stApp { background-color: #080808; color: white; }
     #MainMenu, footer, header {visibility: hidden;}
-    .hero-container { text-align: center; padding: 40px 10px; }
-    .logo-museia { font-size: 28px; font-weight: 800; color: #8A2BE2; margin-bottom: 20px; }
-    .headline { font-size: 38px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; color: #FFFFFF; }
-    .sub-headline { font-size: 18px; color: #A0A0A0; margin-bottom: 30px; }
-    .video-placeholder { width: 100%; max-width: 700px; height: 350px; background: #111; border: 1px solid #333; border-radius: 12px; margin: 0 auto 30px auto; display: flex; align-items: center; justify-content: center; }
-    .benefit-card { background: #121212; border: 1px solid #222; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 20px; min-height: 180px; }
+
+    .hero { text-align:center; padding:60px 20px; }
+    .logo { font-size:26px; font-weight:800; color:#8A2BE2; }
+    .headline { font-size:42px; font-weight:800; margin-top:10px; }
+    .sub { font-size:18px; color:#AAA; margin-top:10px; }
+
+    .card {
+        background:#111;
+        padding:20px;
+        border-radius:12px;
+        border:1px solid #222;
+        margin-bottom:15px;
+    }
+
+    .price {
+        font-size:28px;
+        font-weight:800;
+        margin-top:20px;
+    }
+
     div.stButton > button {
-        background: linear-gradient(180deg, #9D4EDD 0%, #7B2CBF 100%) !important;
-        color: white !important; border: none !important; padding: 20px !important;
-        border-radius: 12px !important; font-size: 20px !important; font-weight: 800 !important; width: 100% !important;
+        background: linear-gradient(180deg, #9D4EDD 0%, #7B2CBF 100%);
+        color: white;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 800;
+        padding: 18px;
+        width:100%;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- SEÇÃO 1: HERO ---
-st.markdown('<div class="hero-container">', unsafe_allow_html=True)
-st.markdown('<div class="logo-museia">MUSEIA DIGITAL</div>', unsafe_allow_html=True)
-st.markdown('<h1 class="headline">Biblioteca de Agentes Inteligentes</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-headline">Automatize tarefas e multiplique sua produtividade com IA — sem ser técnico.</p>', unsafe_allow_html=True)
+# --- HERO ---
+st.markdown('<div class="hero">', unsafe_allow_html=True)
 
-# Espaço do Vídeo
-st.markdown('<div class="video-placeholder">VÍDEO DE APRESENTAÇÃO (60s)</div>', unsafe_allow_html=True)
+st.markdown('<div class="logo">MUSEIA DIGITAL</div>', unsafe_allow_html=True)
 
-st.markdown('### R$ 79,90/mês')
-st.markdown('<p style="color: #00FF7F;">🛡️ 7 dias de garantia | Cancele quando quiser</p>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="headline">Deixe a IA trabalhar por você</div>',
+    unsafe_allow_html=True
+)
 
-if st.button("QUERO ACESSO IMEDIATO"):
-    st.success("Redirecionando para check-out seguro...")
+st.markdown(
+    '<div class="sub">Agentes prontos que automatizam tarefas reais do seu dia a dia — sem precisar saber tecnologia.</div>',
+    unsafe_allow_html=True
+)
+
+if st.button("ACESSAR AGENTES AGORA"):
+    st.success("Redirecionando...")
+
 st.markdown('</div>', unsafe_allow_html=True)
 
 st.divider()
 
-# --- SEÇÃO 2: 3 BENEFÍCIOS ---
+# --- DEMONSTRAÇÃO ---
+st.markdown("## Veja o que você pode fazer")
+
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown('<div class="benefit-card"><h3>⚡ EM 5 MINUTOS</h3><p>Agentes prontos para usar. Copie, cole e implemente hoje mesmo.</p></div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="card">
+    <h4>📧 Responder e-mails</h4>
+    <p>Gere respostas profissionais em segundos.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col2:
-    st.markdown('<div class="benefit-card"><h3>🔄 ATUALIZAÇÕES</h3><p>Novos agentes todo mês na sua central, sem pagar nenhum extra.</p></div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="card">
+    <h4>📊 Criar relatórios</h4>
+    <p>Transforme dados em decisões rápidas.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col3:
-    st.markdown('<div class="benefit-card"><h3>🛡️ RISCO ZERO</h3><p>Garantia total de 7 dias. Se não gostar, devolvemos seu dinheiro.</p></div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="card">
+    <h4>📱 Criar conteúdo</h4>
+    <p>Posts, legendas e textos prontos.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.divider()
 
-# --- SEÇÃO 3: CTA FINAL ---
-st.markdown("<div style='text-align:center; padding: 40px 10px;'>", unsafe_allow_html=True)
-st.markdown("## MENOS DE R$ 3 POR DIA")
-st.markdown("<p style='color:#808080;'>Para ter inteligência artificial trabalhando por você 24 horas por dia.</p>", unsafe_allow_html=True)
+# --- CATÁLOGO (EFEITO NETFLIX) ---
+st.markdown("## Explore os agentes")
+
+agents = [
+    "Gerador de Respostas Profissionais",
+    "Resumo de Reuniões",
+    "Priorizador de Atividades",
+    "Gerador de Posts",
+    "Analisador de Inadimplência",
+    "Planejador de Conteúdo"
+]
+
+cols = st.columns(3)
+
+for i, agent in enumerate(agents):
+    with cols[i % 3]:
+        st.markdown(f"""
+        <div class="card">
+        <strong>{agent}</strong>
+        <p>Pronto para uso imediato</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+st.divider()
+
+# --- BENEFÍCIOS ---
+st.markdown("## Por que usar a MuseIA?")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("⚡ **Rápido**  \nUse em minutos")
+
+with col2:
+    st.markdown("🧠 **Inteligente**  \nIA trabalhando por você")
+
+with col3:
+    st.markdown("💰 **Acessível**  \nCusto baixo para alto retorno")
+
+st.divider()
+
+# --- CTA FINAL ---
+st.markdown('<div style="text-align:center; padding:40px;">', unsafe_allow_html=True)
+
+st.markdown('<div class="price">R$ 79,90/mês</div>', unsafe_allow_html=True)
+
+st.markdown(
+    '<p style="color:#00FF7F;">7 dias de garantia • Cancele quando quiser</p>',
+    unsafe_allow_html=True
+)
 
 if st.button("COMEÇAR AGORA"):
-    st.info("Iniciando processo de assinatura...")
+    st.success("Iniciando...")
 
-st.markdown("<p style='font-size:12px; color:#444; margin-top:20px;'>Pagamento seguro via Hotmart | Acesso imediato</p>", unsafe_allow_html=True)
 st.markdown("</div>", unsafe_allow_html=True)
