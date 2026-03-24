@@ -2,6 +2,10 @@ import streamlit as st
 
 st.set_page_config(page_title="MuseIA", layout="wide")
 
+# --- ESTADO ---
+if "colecoes" not in st.session_state:
+    st.session_state.colecoes = []
+
 # --- ESTILO ---
 st.markdown("""
 <style>
@@ -32,13 +36,8 @@ st.markdown('<div class="sub">A inteligência humana que controla a IA</div>', u
 
 st.divider()
 
-# --- PROPOSTA ---
-st.header("🔥 Você não precisa de mais ferramentas.")
-st.subheader("Você precisa de decisões inteligentes sendo executadas por você.")
+st.header("🔥 Escolha sua transformação:")
 
-st.write("Escolha a coleção que resolve exatamente o seu problema agora:")
-
-# --- COLEÇÕES ---
 colecoes = {
     "Produtividade Administrativa": "#14B8A6",
     "Atendimento & Recepção": "#0EA5E9",
@@ -52,17 +51,27 @@ colecoes = {
     "Financeiro & Cobrança": "#22C55E"
 }
 
+# --- MULTISELECT COM KEY ---
 selecionadas = st.multiselect(
-    "Escolha suas coleções:",
-    list(colecoes.keys())
+    "Selecione suas coleções:",
+    list(colecoes.keys()),
+    default=st.session_state.colecoes,
+    key="multiselect_colecoes"
 )
 
+# --- ATUALIZA ESTADO ---
+st.session_state.colecoes = selecionadas
+
+st.divider()
+
 # --- EXIBIÇÃO ---
-if selecionadas:
-    st.subheader("📦 Sua seleção estratégica:")
+if st.session_state.colecoes:
+
+    st.subheader("📦 Sua estrutura escolhida:")
 
     cols = st.columns(3)
-    for i, nome in enumerate(selecionadas):
+
+    for i, nome in enumerate(st.session_state.colecoes):
         with cols[i % 3]:
             st.markdown(
                 f'<div class="card" style="background:{colecoes[nome]}">{nome}</div>',
@@ -71,38 +80,35 @@ if selecionadas:
 
     st.divider()
 
-    st.header("🚀 Você está a um passo de destravar isso:")
-
-    st.write("Automação + Clareza + Execução = Resultado real")
+    st.header("🚀 Agora sim, você está jogando sério.")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("🔥 Quero ativar essas coleções agora"):
-            st.success("Decisão tomada. Agora você joga em outro nível.")
+        if st.button("🔥 Ativar minha estrutura"):
+            st.success("Sistema ativado. Você desbloqueou outro nível.")
 
     with col2:
-        if st.button("🧠 Montar minha estrutura completa"):
-            st.info("Você está montando um sistema, não comprando um produto.")
+        if st.button("🧠 Montar solução completa"):
+            st.info("Você não está comprando. Está construindo vantagem.")
 
 else:
-    st.info("Selecione pelo menos uma coleção para avançar.")
-
-st.divider()
+    st.warning("⚠️ Escolha pelo menos uma coleção para avançar.")
 
 # --- FAQ ---
+st.divider()
 st.header("❓ Dúvidas Frequentes")
 
-with st.expander("Isso substitui ferramentas?"):
-    st.write("Sim. E mais importante: substitui confusão por clareza.")
+with st.expander("Isso é só mais uma IA?"):
+    st.write("Não. É execução estratégica com inteligência.")
 
-with st.expander("Funciona pra meu tipo de negócio?"):
-    st.write("Se você precisa organizar, vender ou escalar… funciona.")
+with st.expander("Funciona pra qualquer negócio?"):
+    st.write("Sim. Se precisa crescer, funciona.")
 
 with st.expander("Preciso saber usar IA?"):
     st.write("Não. A MuseIA já pensa por você.")
 
-with st.expander("É acesso imediato?"):
+with st.expander("É imediato?"):
     st.write("Sim. Entrou, começou.")
 
 # --- FOOTER ---
