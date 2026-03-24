@@ -66,6 +66,57 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 st.divider()
 
+st.markdown("## Para quem é a MuseIA?")
+
+st.markdown("Escolha sua área e veja como a IA pode trabalhar por você:")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+    <div class="card">
+    <h4>🩺 Clínicas e Consultórios</h4>
+    <p>Automatize confirmações, organize pacientes e reduza tarefas repetitivas da sua clínica.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="card">
+    <h4>💼 Administrativo</h4>
+    <p>Responda e-mails, gere relatórios e organize sua rotina em minutos.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="card">
+    <h4>💇 Salões e Estética</h4>
+    <p>Confirma agendamentos, reativa clientes e mantém sua agenda cheia.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="card">
+    <h4>📊 Planejamento & Operações</h4>
+    <p>Organize prioridades, gere análises e tome decisões mais rápidas.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+    <div class="card">
+    <h4>📣 Marketing & Conteúdo</h4>
+    <p>Crie posts, legendas e planejamentos sem travar na criação.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="card">
+    <h4>👥 Recursos Humanos</h4>
+    <p>Triagem de currículos, respostas e organização de processos seletivos.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 # --- DEMONSTRAÇÃO ---
 st.markdown("## Veja o que você pode fazer")
 
