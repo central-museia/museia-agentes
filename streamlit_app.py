@@ -159,5 +159,37 @@ if st.session_state["agente"]:
         st.title("📧 Humanizador Anti-Robô | Agente 13")
         texto = st.text_area("Cole a mensagem bruta do lead/cliente")
         if st.button("TRANSFORMAR EM RESPOSTA HUMANA"):
+    with st.spinner("Humanizando resposta..."):
+        resposta = gerar_resposta(texto)
+    st.markdown(resposta)
             st.markdown("#### Sugestão MuseIA:")
-            st.info("Oi! Entendemos sua urgência. Vamos resolver isso agora mesmo.")
+          import requests
+
+def gerar_resposta(texto):
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyBCvWULn1WFVil-WIpNDvivZcFE2oSt-Mw"
+
+    prompt = f"""
+    Você é um especialista em comunicação humana.
+
+    Transforme a mensagem abaixo em 3 versões:
+    1. Formal
+    2. Amigável
+    3. Direta
+
+    Mensagem:
+    {texto}
+    """
+
+    payload = {
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }]
+    }
+
+    response = requests.post(url, json=payload)
+
+    if response.status_code == 200:
+        data = response.json()
+        return data["candidates"][0]["content"]["parts"][0]["text"]
+    else:
+        return "Erro ao gerar resposta"
