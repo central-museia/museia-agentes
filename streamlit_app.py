@@ -1,158 +1,155 @@
 import streamlit as st
 
-# 1. CONFIGURAÇÃO DE ELITE (Deve ser a primeira linha)
+# 1. SETUP DE ELITE
 st.set_page_config(
-    page_title="MuseIA Digital | Inteligência Artificial",
+    page_title="MuseIA Digital | Central de Inteligência",
     page_icon="🟣",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# --- BLINDAGEM DE IMPORTAÇÃO (SILENCIOSA) ---
-try:
-    from core import pagamentos
-except:
-    class pagamentos:
-        @staticmethod
-        def exibir_login(): 
-            st.markdown("<div style='text-align:center; padding:50px;'><h2>🔐 Portal Reservado</h2><p>Aguardando conexão com o módulo de segurança.</p></div>", unsafe_allow_html=True)
-            if st.button("ACESSO ADMINISTRADOR"): st.session_state["logado"] = True; st.rerun()
-
-# 2. DESIGN SYSTEM MUSEIA (CSS PREMIUM)
-st.markdown(f"""
+# --- CSS PERSONALIZADO (MUSEIA HIGH-TECH) ---
+st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap');
 
-    /* Background & Global */
-    .stApp {{
-        background-color: #050505;
-        color: #FFFFFF;
-        font-family: 'Inter', sans-serif;
-    }}
+    .stApp {
+        background-color: #0A0A0B;
+        color: #F8F9FA;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
-    /* Header Estilo Payhip/Netflix */
-    .main-header {{
+    /* Esconder elementos padrão */
+    #MainMenu, footer, header {visibility: hidden;}
+
+    /* Título MuseIA - Tipografia Forte */
+    .logo-museia {
+        font-size: 62px;
+        font-weight: 800;
+        background: -webkit-linear-gradient(#FFFFFF, #8A2BE2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -2px;
         text-align: center;
-        padding: 60px 0 20px 0;
-    }}
-    .logo-text {{
-        font-size: 50px;
-        font-weight: 700;
-        color: #E50914; /* Vermelho Assinatura */
-        letter-spacing: -1.5px;
-        margin-bottom: 0px;
-    }}
-    .subtitle {{
-        color: #808080;
-        font-size: 18px;
+        margin-top: 50px;
+    }
+
+    .tagline {
+        text-align: center;
+        color: #A0A0A0; /* Cor corrigida para leitura clara */
+        font-size: 20px;
         font-weight: 300;
+        margin-bottom: 50px;
+    }
+
+    /* Carrossel de Ofertas (Simulado com Estilo) */
+    .highlight-box {
+        background: linear-gradient(90deg, #161618 0%, #1D1D20 100%);
+        border: 1px solid #2D2D30;
+        border-radius: 16px;
+        padding: 40px;
+        text-align: left;
         margin-bottom: 40px;
-    }}
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
 
-    /* Grid de Agentes (Cards Estilo Glassmorphism) */
-    .agent-card {{
-        background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-        border: 1px solid #333;
-        border-radius: 12px;
-        padding: 35px 25px;
-        text-align: center;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        cursor: pointer;
-        min-height: 220px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }}
-    .agent-card:hover {{
-        transform: translateY(-10px);
-        border-color: #E50914;
-        box-shadow: 0 20px 40px rgba(229, 9, 20, 0.15);
-    }}
-    .agent-icon {{ font-size: 45px; margin-bottom: 15px; }}
-    .agent-name {{ font-size: 22px; font-weight: 700; margin-bottom: 10px; }}
-    .agent-desc {{ font-size: 14px; color: #999; line-height: 1.4; }}
+    /* Input de E-mail / Token Estilizado */
+    .stTextInput input {
+        background-color: #161618 !important;
+        border: 1px solid #333 !important;
+        color: white !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        font-size: 16px !important;
+    }
 
-    /* CTA / Botões Estratégicos */
-    div.stButton > button {{
-        background: #E50914 !important;
+    /* Botão CTA Magnético */
+    div.stButton > button {
+        background: #8A2BE2 !important; /* Roxo MuseIA */
         color: white !important;
         border: none !important;
-        padding: 14px 28px !important;
-        border-radius: 6px !important;
+        padding: 20px 40px !important;
+        border-radius: 8px !important;
         font-weight: 700 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 1px !important;
-        transition: 0.3s !important;
+        font-size: 18px !important;
+        text-transform: uppercase;
         width: 100%;
-    }}
-    div.stButton > button:hover {{
-        background: #b20710 !important;
-        transform: scale(1.02);
-    }}
+        transition: 0.4s all;
+    }
+    div.stButton > button:hover {
+        background: #7A1FC2 !important;
+        box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        transform: translateY(-2px);
+    }
 
-    /* Inputs Dark */
-    .stTextInput input {{ background-color: #1a1a1a !important; border: 1px solid #333 !important; color: white !important; }}
+    /* Grid de Agentes */
+    .card-agente {
+        background: #161618;
+        border: 1px solid #2D2D30;
+        padding: 30px;
+        border-radius: 12px;
+        height: 250px;
+        transition: 0.3s;
+    }
+    .card-agente:hover {
+        border-color: #8A2BE2;
+        background: #1D1D20;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. CONTROLE DE SESSÃO
+# 2. LÓGICA DE ESTADO
 if "logado" not in st.session_state:
     st.session_state["logado"] = False
 if "agente" not in st.session_state:
     st.session_state["agente"] = None
 
-# --- TELA DE LOGIN (CORE) ---
+# --- PÁGINA DE ENTRADA (OFERTA E ACESSO) ---
 if not st.session_state["logado"]:
-    st.markdown("<div class='main-header'><h1 class='logo-text'>MUSEIA DIGITAL</h1><p class='subtitle'>A maior central de automação e inteligência de mercado.</p></div>", unsafe_allow_html=True)
-    pagamentos.exibir_login()
+    st.markdown('<h1 class="logo-museia">MuseIA Digital</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="tagline">Inteligência de Mercado e Automação de Alto Impacto.</p>', unsafe_allow_html=True)
+    
+    # Simulação de Carrossel de Ofertas
+    st.markdown("""
+    <div class="highlight-box">
+        <span style="color: #8A2BE2; font-weight: bold; text-transform: uppercase; font-size: 12px;">Destaque da Semana</span>
+        <h2 style="margin: 10px 0;">Deep Scan Agente 04</h2>
+        <p style="color: #B0B0B0; font-size: 16px;">Analise seus concorrentes em segundos e descubra brechas de mercado invisíveis a olho nu.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Campo de Entrada Estratégico
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        email_acesso = st.text_input("", placeholder="Insira seu e-mail ou token de acesso")
+        if st.button("ATIVAR MINHA INTELIGÊNCIA"):
+            if email_acesso: # Lógica de validação virá da pasta CORE
+                st.session_state["logado"] = True
+                st.rerun()
+            else:
+                st.error("Por favor, insira uma credencial válida.")
     st.stop()
 
-# --- VITRINE PRINCIPAL (UI DE CATÁLOGO) ---
+# --- ÁREA INTERNA (CATÁLOGO DE PRODUTOS) ---
 if st.session_state["agente"] is None:
-    # Header do Catálogo
-    st.markdown("<div class='main-header'><h1 class='logo-text'>MUSEIA</h1><p class='subtitle'>Selecione sua ferramenta original de produtividade.</p></div>", unsafe_allow_html=True)
+    st.markdown('<h1 style="font-size: 40px; margin-bottom: 30px;">Sua Central de Comando</h1>', unsafe_allow_html=True)
     
-    st.markdown("### 🔥 Populares no Mercado")
+    col_a, col_b, col_c = st.columns(3)
     
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown("""<div class='agent-card'>
-            <div class='agent-icon'>🏆</div>
-            <div class='agent-name'>Deep Scan</div>
-            <div class='agent-desc'>Análise profunda de concorrência e extração de diferenciais estratégicos.</div>
-        </div>""", unsafe_allow_html=True)
-        if st.button("Iniciar Agente 04"):
-            st.session_state["agente"] = "deepscan"; st.rerun()
+    with col_a:
+        st.markdown('<div class="card-agente"><h3>🏆 Deep Scan</h3><p style="color:#808080">Raio-x de concorrência e propostas de valor.</p></div>', unsafe_allow_html=True)
+        if st.button("Abrir Deep Scan"): st.session_state["agente"] = "04"; st.rerun()
 
-    with col2:
-        st.markdown("""<div class='agent-card'>
-            <div class='agent-icon'>📑</div>
-            <div class='agent-name'>Currículo Master</div>
-            <div class='agent-desc'>Triagem de talentos em massa com ranking de compatibilidade por IA.</div>
-        </div>""", unsafe_allow_html=True)
-        if st.button("Iniciar Agente 31"):
-            st.session_state["agente"] = "curriculos"; st.rerun()
+    with col_b:
+        st.markdown('<div class="card-agente"><h3>📑 Filtro CV</h3><p style="color:#808080">Triagem automatizada de talentos por competência.</p></div>', unsafe_allow_html=True)
+        if st.button("Abrir Filtro"): st.session_state["agente"] = "31"; st.rerun()
 
-    with col3:
-        st.markdown("""<div class='agent-card'>
-            <div class='agent-icon'>📧</div>
-            <div class='agent-name'>Humanizador</div>
-            <div class='agent-desc'>Transformação de scripts robóticos em comunicações de alto engajamento.</div>
-        </div>""", unsafe_allow_html=True)
-        if st.button("Iniciar Agente 13"):
-            st.session_state["agente"] = "humanizador"; st.rerun()
+    with col_c:
+        st.markdown('<div class="card-agente"><h3>📧 Humanizador</h3><p style="color:#808080">Otimização de comunicação para conversão.</p></div>', unsafe_allow_html=True)
+        if st.button("Abrir Humanizador"): st.session_state["agente"] = "13"; st.rerun()
 
-# --- ÁREA DE TRABALHO (INTERNA) ---
 else:
-    col_nav, _ = st.columns([1, 4])
-    with col_nav:
-        if st.button("← VOLTAR"):
-            st.session_state["agente"] = None
-            st.rerun()
-    
-    st.markdown(f"## Operando Agente: {st.session_state['agente'].upper()}")
-    st.divider()
-    
-    # Aqui o Mandante fica esperando você conectar os arquivos das pastas utils/
-    st.info("Aguardando entrada de dados na camada de utilitários...")
+    if st.button("← VOLTAR PARA CENTRAL"):
+        st.session_state["agente"] = None
+        st.rerun()
+    st.write(f"### Módulo {st.session_state['agente']} em operação...")
