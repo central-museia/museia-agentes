@@ -22,8 +22,8 @@ def obter_catalogo():
         catalogo.append({
             "nome": item.get("nome_agente", ""),
             "codigo": item.get("codigo_agente", ""),
-            "colecao": extrair_colecao(item),
-            "publico": extrair_perfil(item),
+            "colecoes": extrair_codigos(item.get("prioridade_colecao")),
+            "perfis": extrair_codigos(item.get("prioridade_perfil")),
             "arquivo": item.get("codigo_agente", "").lower()
         })
 
@@ -31,17 +31,11 @@ def obter_catalogo():
 
 
 # =========================================
-# AUXILIARES (SIMPLES POR ENQUANTO)
+# AUXILIAR
 # =========================================
 
-def extrair_colecao(item):
-    # ajuste conforme estrutura do NocoDB
-    if "colecoes" in item and item["colecoes"]:
-        return item["colecoes"][0].get("nome_colecao", "")
-    return ""
+def extrair_codigos(valor):
+    if not valor:
+        return []
 
-
-def extrair_perfil(item):
-    if "perfis" in item and item["perfis"]:
-        return item["perfis"][0].get("nome_perfil", "")
-    return ""
+    return [v.strip() for v in str(valor).split(",") if v.strip()]
