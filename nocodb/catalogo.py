@@ -21,6 +21,7 @@ def obter_catalogo():
     for item in data:
         catalogo.append({
             "nome": item.get("nome_agente", ""),
+            "imagem": extrair_imagem(item),
             "codigo": item.get("codigo_agente", ""),
             "colecoes": extrair_codigos(item.get("prioridade_colecao")),
             "perfis": extrair_codigos(item.get("prioridade_perfil")),
@@ -39,3 +40,13 @@ def extrair_codigos(valor):
         return []
 
     return [v.strip() for v in str(valor).split(",") if v.strip()]
+
+
+def extrair_imagem(item):
+    if "imagem" in item and item["imagem"]:
+        return item["imagem"][0].get("url", "")
+    return ""
+
+
+def extrair_texto_seguro(item, campo):
+    return str(item.get(campo, "")).strip()
