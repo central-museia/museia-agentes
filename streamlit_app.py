@@ -59,35 +59,42 @@ with col3:
 # ===== AGENTES =====
 
 # 1 - DEEP SCAN
-if st.session_state.get("agente") == "deepscan":
-    st.title("🏆 Analista Deep Scan")
+st.markdown("## 🎬 Explore os Agentes da MuseIA")
 
-    url = st.text_input("Cole a URL do concorrente")
+col1, col2 = st.columns(2)
 
-    if st.button("Analisar"):
-        st.success("Análise simulada: concorrente foca em preço e público iniciante.")
+with col1:
+    st.markdown("""
+    <div style="background-color:#1e293b;padding:25px;border-radius:20px;margin-bottom:20px">
+        <h3>🏆 Analista de Mercado Deep Scan</h3>
+        <p>Descubra como seus concorrentes posicionam ofertas, preços e público-alvo em segundos.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-# 2 - CURRÍCULOS
-if st.session_state.get("agente") == "curriculos":
-    st.title("📑 Filtro de Currículos")
+    if st.button("Acessar Deep Scan"):
+        st.session_state["agente"] = "deepscan"
 
-    arquivos = st.file_uploader("Envie PDFs", accept_multiple_files=True)
+with col2:
+    st.markdown("""
+    <div style="background-color:#1e293b;padding:25px;border-radius:20px;margin-bottom:20px">
+        <h3>📑 Filtro Inteligente de Currículos</h3>
+        <p>Analise dezenas de currículos automaticamente e receba um ranking pronto.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    if arquivos and st.button("Analisar"):
-        st.success(f"{len(arquivos)} currículos analisados com sucesso!")
+    if st.button("Acessar Currículos"):
+        st.session_state["agente"] = "curriculos"
 
-# 3 - HUMANIZADOR
-if st.session_state.get("agente") == "humanizador":
-    st.title("📧 Humanizador Anti-Robô")
 
-    texto = st.text_area("Cole a mensagem do cliente")
+col3, col4 = st.columns(2)
 
-    if st.button("Gerar respostas"):
-        st.write("### Formal")
-        st.write("Prezado cliente, entendemos sua situação.")
+with col3:
+    st.markdown("""
+    <div style="background-color:#1e293b;padding:25px;border-radius:20px;margin-bottom:20px">
+        <h3>📧 Humanizador Anti-Robô</h3>
+        <p>Transforme respostas frias em mensagens naturais e humanas.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-        st.write("### Amigável")
-        st.write("Oi! Entendo totalmente 😊")
-
-        st.write("### Direta")
-        st.write("Vamos resolver isso agora.")
+    if st.button("Acessar Humanizador"):
+        st.session_state["agente"] = "humanizador"
