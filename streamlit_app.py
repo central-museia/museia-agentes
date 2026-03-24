@@ -22,9 +22,22 @@ st.markdown("""
         background:#111;
         padding:20px;
         border-radius:12px;
-        border:1px solid #222;
         margin-bottom:15px;
+        border:1px solid #222;
+        transition:0.3s;
     }
+
+    .card:hover {
+        transform: scale(1.02);
+        border:1px solid #555;
+    }
+
+    /* CORES POR CATEGORIA */
+    .growth { border-left: 5px solid #16A34A; }
+    .bi { border-left: 5px solid #2563EB; }
+    .gestao { border-left: 5px solid #7C3AED; }
+    .marketing { border-left: 5px solid #F97316; }
+    .financeiro { border-left: 5px solid #14B8A6; }
 
     .price {
         font-size:28px;
@@ -49,15 +62,9 @@ st.markdown('<div class="hero">', unsafe_allow_html=True)
 
 st.markdown('<div class="logo">MUSEIA DIGITAL</div>', unsafe_allow_html=True)
 
-st.markdown(
-    '<div class="headline">Deixe a IA trabalhar por você</div>',
-    unsafe_allow_html=True
-)
+st.markdown('<div class="headline">Deixe a IA trabalhar por você</div>', unsafe_allow_html=True)
 
-st.markdown(
-    '<div class="sub">Agentes prontos que automatizam tarefas reais do seu dia a dia — sem precisar saber tecnologia.</div>',
-    unsafe_allow_html=True
-)
+st.markdown('<div class="sub">Automatize tarefas reais do seu dia a dia — sem precisar saber tecnologia.</div>', unsafe_allow_html=True)
 
 if st.button("ACESSAR AGENTES AGORA"):
     st.success("Redirecionando...")
@@ -66,56 +73,58 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 st.divider()
 
+# --- IDENTIFICAÇÃO POR PERFIL ---
 st.markdown("## Para quem é a MuseIA?")
-
 st.markdown("Escolha sua área e veja como a IA pode trabalhar por você:")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown("""
-    <div class="card">
+    <div class="card gestao">
     <h4>🩺 Clínicas e Consultórios</h4>
-    <p>Automatize confirmações, organize pacientes e reduza tarefas repetitivas da sua clínica.</p>
+    <p>Reduza tarefas repetitivas e organize sua clínica automaticamente.</p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="card">
+    <div class="card growth">
     <h4>💼 Administrativo</h4>
-    <p>Responda e-mails, gere relatórios e organize sua rotina em minutos.</p>
+    <p>Responda e-mails e gere relatórios sem esforço.</p>
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
     st.markdown("""
-    <div class="card">
+    <div class="card marketing">
     <h4>💇 Salões e Estética</h4>
-    <p>Confirma agendamentos, reativa clientes e mantém sua agenda cheia.</p>
+    <p>Mantenha sua agenda cheia e automatize o atendimento.</p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="card">
+    <div class="card bi">
     <h4>📊 Planejamento & Operações</h4>
-    <p>Organize prioridades, gere análises e tome decisões mais rápidas.</p>
+    <p>Tome decisões com base em dados em minutos.</p>
     </div>
     """, unsafe_allow_html=True)
 
 with col3:
     st.markdown("""
-    <div class="card">
+    <div class="card marketing">
     <h4>📣 Marketing & Conteúdo</h4>
-    <p>Crie posts, legendas e planejamentos sem travar na criação.</p>
+    <p>Crie posts e conteúdos sem travar na criação.</p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="card">
+    <div class="card gestao">
     <h4>👥 Recursos Humanos</h4>
-    <p>Triagem de currículos, respostas e organização de processos seletivos.</p>
+    <p>Organize processos seletivos e respostas automaticamente.</p>
     </div>
     """, unsafe_allow_html=True)
+
+st.divider()
 
 # --- DEMONSTRAÇÃO ---
 st.markdown("## Veja o que você pode fazer")
@@ -124,48 +133,48 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown("""
-    <div class="card">
+    <div class="card growth">
     <h4>📧 Responder e-mails</h4>
-    <p>Gere respostas profissionais em segundos.</p>
+    <p>Respostas profissionais em segundos.</p>
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
     st.markdown("""
-    <div class="card">
+    <div class="card bi">
     <h4>📊 Criar relatórios</h4>
-    <p>Transforme dados em decisões rápidas.</p>
+    <p>Transforme dados em decisões.</p>
     </div>
     """, unsafe_allow_html=True)
 
 with col3:
     st.markdown("""
-    <div class="card">
+    <div class="card marketing">
     <h4>📱 Criar conteúdo</h4>
-    <p>Posts, legendas e textos prontos.</p>
+    <p>Posts e legendas prontos.</p>
     </div>
     """, unsafe_allow_html=True)
 
 st.divider()
 
-# --- CATÁLOGO (EFEITO NETFLIX) ---
+# --- CATÁLOGO ---
 st.markdown("## Explore os agentes")
 
 agents = [
-    "Gerador de Respostas Profissionais",
-    "Resumo de Reuniões",
-    "Priorizador de Atividades",
-    "Gerador de Posts",
-    "Analisador de Inadimplência",
-    "Planejador de Conteúdo"
+    ("Gerador de Respostas Profissionais", "growth"),
+    ("Resumo de Reuniões", "gestao"),
+    ("Priorizador de Atividades", "bi"),
+    ("Gerador de Posts", "marketing"),
+    ("Analisador de Inadimplência", "financeiro"),
+    ("Planejador de Conteúdo", "marketing")
 ]
 
 cols = st.columns(3)
 
-for i, agent in enumerate(agents):
+for i, (agent, categoria) in enumerate(agents):
     with cols[i % 3]:
         st.markdown(f"""
-        <div class="card">
+        <div class="card {categoria}">
         <strong>{agent}</strong>
         <p>Pronto para uso imediato</p>
         </div>
@@ -185,7 +194,7 @@ with col2:
     st.markdown("🧠 **Inteligente**  \nIA trabalhando por você")
 
 with col3:
-    st.markdown("💰 **Acessível**  \nCusto baixo para alto retorno")
+    st.markdown("💰 **Acessível**  \nAlto retorno com baixo custo")
 
 st.divider()
 
