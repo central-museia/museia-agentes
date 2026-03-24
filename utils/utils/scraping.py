@@ -1,1 +1,0 @@
-# leitura de sites (BeautifulSoup)
