@@ -1,16 +1,10 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="MuseIA",
-    layout="wide"
-)
+st.set_page_config(page_title="MuseIA", layout="wide")
 
 # --- ESTILO ---
 st.markdown("""
 <style>
-body {
-    background-color: #0f172a;
-}
 .big-title {
     font-size: 60px;
     font-weight: bold;
@@ -21,19 +15,13 @@ body {
     font-size: 20px;
     opacity: 0.7;
 }
-.cta button {
-    background-color: #22C55E !important;
-    color: white !important;
-    border-radius: 10px !important;
-    height: 60px !important;
-    font-size: 18px !important;
-}
 .card {
     padding:20px;
     border-radius:15px;
     text-align:center;
     font-weight:bold;
     margin:10px;
+    color:white;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -42,84 +30,81 @@ body {
 st.markdown('<div class="big-title">MuseIA</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub">A inteligência humana que controla a IA</div>', unsafe_allow_html=True)
 
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("🚀 Quero dominar a IA agora"):
-        st.success("Você está a um clique da sua nova realidade.")
-
-with col2:
-    if st.button("🔥 Ver todos os agentes"):
-        st.info("Prepare-se. Isso muda tudo.")
-
 st.divider()
 
 # --- PROPOSTA ---
-st.header("🔥 O que você ganha com a MuseIA?")
-st.write("Produtividade absurda. Clareza. Estratégia. Execução. Tudo no piloto automático inteligente.")
+st.header("🔥 Você não precisa de mais ferramentas.")
+st.subheader("Você precisa de decisões inteligentes sendo executadas por você.")
 
-# --- FUNÇÃO DE CARDS ---
-def card(nome, cor):
-    st.markdown(f'<div class="card" style="background:{cor}">{nome}</div>', unsafe_allow_html=True)
+st.write("Escolha a coleção que resolve exatamente o seu problema agora:")
 
-# --- GROWTH ---
-st.header("🚀 Growth")
-cols = st.columns(3)
-with cols[0]: card("Prospecção de Vendas", "#16A34A")
-with cols[1]: card("Assistente de E-mail", "#22C55E")
-with cols[2]: card("Conteúdo Multicanal", "#84CC16")
+# --- COLEÇÕES ---
+colecoes = {
+    "Produtividade Administrativa": "#14B8A6",
+    "Atendimento & Recepção": "#0EA5E9",
+    "Clínicas e Consultórios": "#2563EB",
+    "Salões e Estética": "#F97316",
+    "Planejamento & Operações": "#1D4ED8",
+    "Vendas & Prospecção": "#16A34A",
+    "Marketing & Conteúdo": "#84CC16",
+    "Recursos Humanos": "#9333EA",
+    "Suporte ao Cliente": "#7C3AED",
+    "Financeiro & Cobrança": "#22C55E"
+}
 
-# --- BI ---
-st.header("📊 Business Intelligence")
-cols = st.columns(3)
-with cols[0]: card("Pesquisa de Mercado", "#2563EB")
-with cols[1]: card("Inteligência de Pesquisa", "#1D4ED8")
-with cols[2]: card("Notícias do Setor", "#0EA5E9")
+selecionadas = st.multiselect(
+    "Escolha suas coleções:",
+    list(colecoes.keys())
+)
 
-# --- GESTÃO ---
-st.header("🧠 Gestão & Cultura")
-cols = st.columns(4)
-with cols[0]: card("Feedback do Cliente", "#7C3AED")
-with cols[1]: card("Voz da Marca", "#9333EA")
-with cols[2]: card("Eventos", "#A855F7")
-with cols[3]: card("RH no Slack", "#C084FC")
+# --- EXIBIÇÃO ---
+if selecionadas:
+    st.subheader("📦 Sua seleção estratégica:")
 
-# --- MARKETING ---
-st.header("🎯 Marketing")
-card("Criador de Conteúdo", "#F97316")
+    cols = st.columns(3)
+    for i, nome in enumerate(selecionadas):
+        with cols[i % 3]:
+            st.markdown(
+                f'<div class="card" style="background:{colecoes[nome]}">{nome}</div>',
+                unsafe_allow_html=True
+            )
 
-st.divider()
+    st.divider()
 
-# --- CTA FINAL ---
-st.header("💡 Ainda está pensando?")
+    st.header("🚀 Você está a um passo de destravar isso:")
 
-col1, col2 = st.columns(2)
+    st.write("Automação + Clareza + Execução = Resultado real")
 
-with col1:
-    if st.button("💥 Isso era exatamente o que me faltava"):
-        st.success("Bem-vindo à evolução.")
+    col1, col2 = st.columns(2)
 
-with col2:
-    if st.button("🧠 Quero evoluir agora"):
-        st.success("Você não está comprando… está evoluindo.")
+    with col1:
+        if st.button("🔥 Quero ativar essas coleções agora"):
+            st.success("Decisão tomada. Agora você joga em outro nível.")
+
+    with col2:
+        if st.button("🧠 Montar minha estrutura completa"):
+            st.info("Você está montando um sistema, não comprando um produto.")
+
+else:
+    st.info("Selecione pelo menos uma coleção para avançar.")
 
 st.divider()
 
 # --- FAQ ---
 st.header("❓ Dúvidas Frequentes")
 
-with st.expander("Isso é só mais uma IA?"):
-    st.write("Não. É estratégia aplicada com inteligência humana.")
+with st.expander("Isso substitui ferramentas?"):
+    st.write("Sim. E mais importante: substitui confusão por clareza.")
 
-with st.expander("Preciso saber tecnologia?"):
-    st.write("Zero. A MuseIA simplifica tudo.")
+with st.expander("Funciona pra meu tipo de negócio?"):
+    st.write("Se você precisa organizar, vender ou escalar… funciona.")
 
-with st.expander("Funciona pra qualquer negócio?"):
-    st.write("Sim. Se você precisa crescer, funciona.")
+with st.expander("Preciso saber usar IA?"):
+    st.write("Não. A MuseIA já pensa por você.")
 
 with st.expander("É acesso imediato?"):
-    st.write("Sim. Comprou, começou.")
+    st.write("Sim. Entrou, começou.")
 
 # --- FOOTER ---
 st.markdown("---")
-st.markdown("MuseIA © 2026 — Revolucionando a forma de pensar, criar e vender.")
+st.markdown("MuseIA © 2026 — Inteligência aplicada que gera resultado.")
