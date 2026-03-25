@@ -1,5 +1,6 @@
 import requests
 import streamlit as st
+import re
 from logger_museia import registrar_falha
 
 # Configuração Centralizada de Headers
@@ -9,23 +10,28 @@ def obter_headers():
         "Content-Type": "application/json"
     }
 
-def extrair_imagem(item, campo_nome="Imagem"):
+def extrair_imagem(item, campo_nome):
     """
-    Lógica robusta para extrair a URL da imagem. 
-    Funciona para Agentes, Coleções e Perfis.
+    Lógica definitiva para extrair a URL da imagem.
+    Limpa o formato 'nome.png(http...)' e aceita listas do NocoDB.
     """
+    # Tenta buscar o campo com o nome exato ou todo em minúsculo
     imagem_campo = item.get(campo_nome) or item.get(campo_nome.lower())
     
-    # 1. Caso seja lista de dicionários (upload direto no NocoDB)
+    if not imagem_campo:
+        return None
+
+    # 1. Se for lista de dicionários (Upload direto no NocoDB)
     if isinstance(imagem_campo, list) and len(imagem_campo) > 0:
         return imagem_campo[0].get("url") or imagem_campo[0].get("path", "")
     
-    # 2. Caso venha como string com URL entre parênteses (comum em CSVs)
-    if isinstance(imagem_campo, str) and "https" in imagem_campo:
-        import re
-        urls = re.findall(r'(https?://[^\s)]+)', imagem_campo)
-        return urls[0] if urls else None
-        
+    # 2. Se for string com link entre parênteses (Importação de CSV)
+    if isinstance(imagem_campo, str):
+        # Procura por qualquer link que comece com http dentro da string
+        links = re.findall(r'https?://[^\s)]+', imagem_campo)
+        if links:
+            return links[0]
+            
     return None
 
 # --- FUNÇÃO 1: AGENTES ---
@@ -44,7 +50,7 @@ def obter_catalogo():
                     "nome": item.get("nome_agente"),
                     "codigo": item.get("codigo_agente"),
                     "descricao": item.get("descricao"),
-                    "imagem": extrair_imagem(item, "Imagem"),
+                    "imagem": extrair_imagem(item, "Imagem"), # Busca na coluna 'Imagem'
                     "colecoes": str(item.get("prioridade_colecao", "")).split(","),
                     "perfis": str(item.get("prioridade_perfil", "")).split(","),
                     "cor": item.get("cor_hex", "#14B8A6")
@@ -71,7 +77,7 @@ def obter_colecoes():
                     "codigo": item.get("codigo"),
                     "descricao": item.get("descricao"),
                     "cor": item.get("cor_hex", "#0EA5E9"),
-                    "imagem": extrair_imagem(item, "imagem_colecao") # Novo campo solicitado
+                    "imagem": extrair_imagem(item, "imagem_colecao") # Busca na nova coluna
                 })
         return colecoes
     except Exception as e:
@@ -94,7 +100,7 @@ def obter_perfis():
                     "nome": item.get("nome_perfil"),
                     "codigo": item.get("codigo"),
                     "descricao": item.get("descricao"),
-                    "imagem": extrair_imagem(item, "imagem_perfil") # Novo campo solicitado
+                    "imagem": extrair_imagem(item, "imagem_perfil") # Busca na nova coluna
                 })
         return perfis
     except Exception as e:
