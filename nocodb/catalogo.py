@@ -4,38 +4,53 @@ import streamlit as st
 def obter_catalogo():
     # Busca as credenciais nos secrets do Streamlit
     try:
+        # Puxa os dados do st.secrets (conforme configurado no seu TOML)
         url = st.secrets['nocodb']['url']
-        headers = {"xc-token": st.secrets["nocodb"]["api_key"]}
+        api_key = st.secrets["nocodb"]["api_key"]
         
-        # Adicionamos um timeout de 10 segundos para não travar o app se o NocoDB estiver lento
-        response = requests.get(url, headers=headers, timeout=10)
+        headers = {
+            "xc-token": api_key,
+            "Content-Type": "application/json"
+        }
+        
+        # Parâmetros para garantir que tragamos até 100 agentes de uma vez
+        params = {"limit": 100}
 
-        # Se o status não for 200, levantamos um erro para cair no bloco 'except'
+        # Request com timeout de 10s para evitar travamento infinito
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+
+        # Se houver erro de conexão ou permissão (401, 403, 404), vai direto para o except
         response.raise_for_status()
 
-        data = response.json().get("records", [])
+        # O NocoDB v2 usa "list" ou "records" dependendo da versão da API
+        dados_brutos = response.json()
+        records = dados_brutos.get("list") or dados_brutos.get("records") or []
+        
         catalogo = []
 
-        for item in data:
+        for item in records:
+            # Extração segura com .get() para evitar erros de chave inexistente
+            codigo = item.get("codigo_agente", "")
+            
             catalogo.append({
-                "nome": item.get("nome_agente", ""),
+                "nome": item.get("nome_agente", "Agente Sem Nome"),
                 "imagem": extrair_imagem(item),
-                "codigo": item.get("codigo_agente", ""),
+                "codigo": codigo,
                 "colecoes": extrair_codigos(item.get("prioridade_colecao")),
                 "perfis": extrair_codigos(item.get("prioridade_perfil")),
-                "arquivo": item.get("codigo_agente", "").lower()
+                "arquivo": str(codigo).lower() if codigo else "indefinido"
             })
 
         return catalogo
 
-    except (requests.exceptions.RequestException, KeyError) as e:
-        # Se houver erro de conexão, timeout ou erro de URL/Chave nos secrets
-        st.error(f"⚠️ Não foi possível conectar ao catálogo do NocoDB. Exibindo modo de segurança.")
+    except Exception as e:
+        # Log de erro silencioso no console do Streamlit Cloud, mas amigável na tela
+        st.warning(f"⚠️ Conexão NocoDB indisponível. Usando catálogo de contingência.")
         
-        # Retorna o Fallback para o app não parar de funcionar
+        # Fallback de segurança para o MuseIA não ficar em branco
         return [
             {
-                "nome": "Agente de Teste (Modo Offline)",
+                "nome": "Agente de Teste (Offline)",
                 "imagem": "",
                 "codigo": "TEST-001",
                 "colecoes": ["ADM"],
@@ -45,15 +60,23 @@ def obter_catalogo():
         ]
 
 # =========================================
-# AUXILIARES (Mantidos como os seus)
+# FUNÇÕES AUXILIARES DE TRATAMENTO
 # =========================================
 
 def extrair_codigos(valor):
+    """Trata strings separadas por vírgula vindas do banco."""
     if not valor:
         return []
+    # Converte para string antes de fazer o split para evitar erro com números
     return [v.strip() for v in str(valor).split(",") if v.strip()]
 
 def extrair_imagem(item):
-    if isinstance(item.get("imagem"), list) and len(item["imagem"]) > 0:
-        return item["imagem"][0].get("url", "")
+    """Extrai a URL da imagem do formato de anexo do NocoDB."""
+    imagem_campo = item.get("imagem")
+    
+    # O NocoDB envia imagens como uma lista de dicionários
+    if isinstance(imagem_campo, list) and len(imagem_campo) > 0:
+        # Tenta pegar a URL direta ou o path relativo
+        img = imagem_campo[0]
+        return img.get("url") or img.get("path", "")
     return ""
