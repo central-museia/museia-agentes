@@ -29,23 +29,50 @@ colecoes_db = obter_colecoes()
 perfis_db = obter_perfis()
 agentes_db = obter_catalogo()
 
-# --- SEÇÃO 1: HEADER (Logo, Busca, Login) ---
+# --- SEÇÃO 1: HEADER (Logo, Pesquisa, Login) ---
 col_logo, col_busca, col_login = st.columns([1, 2, 1])
 
 with col_logo:
-    st.image("assets/logo.png", width=120) 
+    st.image("assets/logo.png", width=120)
 
 with col_busca:
-    # Busca com Lupa
-    termo_busca = st.text_input("🔍", placeholder="O que você deseja automatizar?", label_visibility="collapsed")
+    # O comando label_visibility="collapsed" deixa o visual mais limpo para um header
+    termo_busca = st.text_input(
+        "🔍", 
+        placeholder="O que você quer automatizar hoje?", 
+        label_visibility="collapsed",
+        key="campo_pesquisa"
+    )
+    if termo_busca:
+        st.session_state.filtro_pesquisa = termo_busca
 
 with col_login:
-    if not st.session_state.logado:
-        if st.button("👤 Entrar / Cadastrar", use_container_width=True):
-            st.session_state.mostrar_auth = not st.session_state.mostrar_auth
-    else:
-        st.success(f"Olá, {st.session_state.usuario['nome_completo'].split()[0]}!")
+    # Criamos duas colunas pequenas dentro da coluna de login
+    c1, c2 = st.columns(2)
+    with c1:
+        if st.button("Entrar", use_container_width=True):
+            st.session_state.abrir_login = True
+    with c2:
+        if st.button("Cadastrar", type="primary", use_container_width=True):
+            st.session_state.abrir_cadastro = True
 
+# --- LÓGICA DE INTERAÇÃO (LOGIN/CADASTRO) ---
+if st.session_state.get("abrir_login"):
+    with st.expander("🔐 Acessar sua conta MuseIA", expanded=True):
+        email = st.text_input("E-mail")
+        senha = st.text_input("Senha", type="password")
+        if st.button("Confirmar Login"):
+            # Aqui depois conectaremos com sua tabela de 'Usuarios' do NocoDB
+            st.info("Validando credenciais...")
+
+if st.session_state.get("abrir_cadastro"):
+    with st.expander("📝 Criar nova conta", expanded=True):
+        novo_nome = st.text_input("Nome Completo")
+        novo_email = st.text_input("Seu melhor e-mail")
+        nova_senha = st.text_input("Defina uma senha", type="password")
+        if st.button("Finalizar Cadastro"):
+            # Aqui usaremos um 'requests.post' para enviar ao seu NocoDB
+            st.success("Cadastro realizado! Verifique seu e-mail.")
 # Exibição da Área de Login Separada (Se acionada)
 if st.session_state.mostrar_auth and not st.session_state.logado:
     st.divider()
