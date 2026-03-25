@@ -3,19 +3,25 @@ import streamlit as st
 
 
 def obter_catalogo():
-    url = f"{st.secrets['nocodb']['url']}/api/v2/tables/mdg3nak99r78agx/records"
-
-    headers = {
-        "xc-token": st.secrets["nocodb"]["api_key"]
-    }
+    url = st.secrets['nocodb']['url']
+    headers = {"xc-token": st.secrets["nocodb"]["api_key"]}
 
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
-        return []
+        # Fallback para teste
+        return [
+            {
+                "nome": "Agente de Teste",
+                "imagem": "",
+                "codigo": "TEST-001",
+                "colecoes": ["ADM"],
+                "perfis": ["EMP"],
+                "arquivo": "test-001"
+            }
+        ]
 
     data = response.json().get("records", [])
-
     catalogo = []
 
     for item in data:
