@@ -6,7 +6,6 @@ def obter_catalogo():
     try:
         url = st.secrets['nocodb']['url']
         api_key = st.secrets["nocodb"]["api_key"]
-
         headers = {
             "xc-token": api_key,
             "Content-Type": "application/json"
