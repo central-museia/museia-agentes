@@ -53,5 +53,27 @@ def extrair_imagem(item):
     if isinstance(imagem_campo, list) and len(imagem_campo) > 0:
         img = imagem_campo[0]
         return img.get("url") or img.get("path", "")
+
+
+    import requests
+import streamlit as st
+from logger_museia import registrar_falha  # Importa sua nova ferramenta
+
+def obter_catalogo():
+    try:
+        url = st.secrets['nocodb']['url']
+        headers = {"xc-token": st.secrets["nocodb"]["api_key"]}
+        
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+        
+        return response.json().get("records", [])
+
+    except Exception as e:
+        # Aqui está o segredo: enviamos o erro para o arquivo separado
+        registrar_falha("obter_catalogo", e)
+        
+        # O usuário não vê o erro técnico, apenas o modo de segurança
+        return []
     
     return ""
