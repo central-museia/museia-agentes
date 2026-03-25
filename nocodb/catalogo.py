@@ -9,19 +9,23 @@ def obter_headers():
         "Content-Type": "application/json"
     }
 
-def extrair_imagem(item):
-    """Lógica robusta para extrair a URL da imagem (do campo 'Imagem')"""
-    # O NocoDB pode mandar como lista de dicionários ou string com URL entre parênteses
-    imagem_campo = item.get("Imagem") or item.get("imagem")
+def extrair_imagem(item, campo_nome="Imagem"):
+    """
+    Lógica robusta para extrair a URL da imagem. 
+    Funciona para Agentes, Coleções e Perfis.
+    """
+    imagem_campo = item.get(campo_nome) or item.get(campo_nome.lower())
     
+    # 1. Caso seja lista de dicionários (upload direto no NocoDB)
     if isinstance(imagem_campo, list) and len(imagem_campo) > 0:
         return imagem_campo[0].get("url") or imagem_campo[0].get("path", "")
     
-    # Fallback caso a imagem venha como string (comum em CSVs/importações)
+    # 2. Caso venha como string com URL entre parênteses (comum em CSVs)
     if isinstance(imagem_campo, str) and "https" in imagem_campo:
         import re
         urls = re.findall(r'(https?://[^\s)]+)', imagem_campo)
         return urls[0] if urls else None
+        
     return None
 
 # --- FUNÇÃO 1: AGENTES ---
@@ -35,13 +39,12 @@ def obter_catalogo():
         
         catalogo = []
         for item in records:
-            # Filtro de Ativo (aceita booleano ou string 'true')
             if str(item.get("ativo")).lower() == "true":
                 catalogo.append({
                     "nome": item.get("nome_agente"),
                     "codigo": item.get("codigo_agente"),
                     "descricao": item.get("descricao"),
-                    "imagem": extrair_imagem(item),
+                    "imagem": extrair_imagem(item, "Imagem"),
                     "colecoes": str(item.get("prioridade_colecao", "")).split(","),
                     "perfis": str(item.get("prioridade_perfil", "")).split(","),
                     "cor": item.get("cor_hex", "#14B8A6")
@@ -67,7 +70,8 @@ def obter_colecoes():
                     "nome": item.get("nome_colecao"),
                     "codigo": item.get("codigo"),
                     "descricao": item.get("descricao"),
-                    "cor": item.get("cor_hex", "#0EA5E9")
+                    "cor": item.get("cor_hex", "#0EA5E9"),
+                    "imagem": extrair_imagem(item, "imagem_colecao") # Novo campo solicitado
                 })
         return colecoes
     except Exception as e:
@@ -89,7 +93,8 @@ def obter_perfis():
                 perfis.append({
                     "nome": item.get("nome_perfil"),
                     "codigo": item.get("codigo"),
-                    "descricao": item.get("descricao")
+                    "descricao": item.get("descricao"),
+                    "imagem": extrair_imagem(item, "imagem_perfil") # Novo campo solicitado
                 })
         return perfis
     except Exception as e:
