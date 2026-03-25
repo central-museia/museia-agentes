@@ -1,5 +1,5 @@
 import streamlit as st
-from nocodb.catalogo import obter_catalogo, obter_perfis, obter_colecoes
+from nocodb.catalogo import obter_catalogo
 from auth.auth_museia import renderizar_interface_login
 
 # 1. CONFIGURAÇÃO DE PÁGINA
