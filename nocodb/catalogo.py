@@ -14,7 +14,7 @@ def obter_catalogo():
     if response.status_code != 200:
         return []
 
-    data = response.json().get("list", [])
+    data = response.json().get("records", [])
 
     catalogo = []
 
