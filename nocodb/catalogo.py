@@ -3,7 +3,7 @@ import streamlit as st
 
 
 def obter_catalogo():
-    url = f"{st.secrets['nocodb']['url']}/api/v2/tables/mdg3nak99r78agx/records""
+    url = f"{st.secrets['nocodb']['url']}/api/v2/tables/mdg3nak99r78agx/records"
 
     headers = {
         "xc-token": st.secrets["nocodb"]["api_key"]
