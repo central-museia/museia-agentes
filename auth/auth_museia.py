@@ -9,7 +9,7 @@ def cadastrar_usuario(nome, email, senha):
             "nome": nome,
             "email": email,
             "senha": senha,
-            "status_pagamento": "Gratuito",
+            "status_pagamento": "pendente",
             "ativo": True,
             "bloqueado": False
         }
