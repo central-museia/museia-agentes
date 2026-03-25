@@ -5,7 +5,7 @@ def obter_catalogo():
     # Busca as credenciais nos secrets do Streamlit
     try:
         # Puxa os dados do st.secrets (conforme configurado no seu TOML)
-        url = st.secrets['nocodb']['url']
+       url = f"{st.secrets['nocodb']['url']}{st.secrets['nocodb']['table_path']}"
         api_key = st.secrets["nocodb"]["api_key"]
         
         headers = {
