@@ -3,16 +3,21 @@ import requests
 from nocodb.catalogo import obter_headers
 
 def cadastrar_usuario(nome, email, senha):
-    """Insere o lead no NocoDB usando os nomes de coluna: nome, email, senha, status."""
+    """
+    Cadastro seguindo rigorosamente a estrutura do CSV:
+    nome, email, senha, status_pagamento, ativo, bloqueado
+    """
     try:
         url = st.secrets['nocodb']['url_usuarios']
         
-        # Usando 'nome' conforme sua orientação do banco
+        # Payload ajustado conforme o seu arquivo Getting Started - Usuarios
         payload = {
             "nome": nome,
             "email": email,
             "senha": senha,
-            "status": "Lead"
+            "status_pagamento": "Gratuito", # Campo exato do seu CSV
+            "ativo": True,                 # Campo exato do seu CSV
+            "bloqueado": False             # Campo exato do seu CSV
         }
         
         response = requests.post(url, headers=obter_headers(), json=payload, timeout=10)
@@ -20,26 +25,25 @@ def cadastrar_usuario(nome, email, senha):
         if response.status_code in [200, 201]:
             return True
         else:
-            # Se ainda der erro, o Streamlit vai mostrar o motivo exato aqui:
-            st.error(f"Erro do Banco (Verifique os nomes das colunas): {response.text}")
+            # Se o erro persistir, o NocoDB dirá o porquê aqui
+            st.error(f"Erro do NocoDB: {response.text}")
             return False
     except Exception as e:
-        st.error(f"Falha de comunicação: {e}")
+        st.error(f"Falha técnica: {e}")
         return False
 
 def validar_login(email, senha):
-    """Valida o login buscando pelo campo 'email'."""
+    """Busca o usuário e valida a senha conforme as colunas do seu CSV."""
     try:
         url = st.secrets['nocodb']['url_usuarios']
         params = {"where": f"(email,eq,{email})"}
         response = requests.get(url, headers=obter_headers(), params=params, timeout=10)
         
-        # Tenta capturar a lista de registros
-        dados = response.json().get("list") or response.json().get("records") or []
+        records = response.json().get("list") or response.json().get("records") or []
         
-        if dados:
-            user = dados[0]
-            # Valida se a senha bate com a coluna 'senha'
+        if records:
+            user = records[0]
+            # Validação direta da coluna 'senha' do seu CSV
             if str(user.get("senha")) == str(senha):
                 return user
         return None
@@ -48,31 +52,31 @@ def validar_login(email, senha):
         return None
 
 def renderizar_interface_login():
-    """Interface de acesso simplificada."""
-    st.markdown("### 🔐 Área do Cliente")
-    aba_login, aba_cadastro = st.tabs(["Entrar", "Criar Conta Grátis"])
+    st.markdown("### 🔐 Área do Cliente MuseIA")
+    tab_in, tab_up = st.tabs(["Entrar", "Criar Conta Grátis"])
     
-    with aba_login:
-        email = st.text_input("E-mail", key="auth_email")
-        senha = st.text_input("Senha", type="password", key="auth_senha")
-        if st.button("Acessar Minha MuseIA", use_container_width=True):
-            user = validar_login(email, senha)
-            if user:
+    with tab_in:
+        e = st.text_input("E-mail", key="l_e")
+        s = st.text_input("Senha", type="password", key="l_s")
+        if st.button("Acessar Painel", use_container_width=True):
+            usuario = validar_login(e, s)
+            if usuario:
                 st.session_state.logado = True
-                st.session_state.usuario = user
-                st.success(f"Bem-vinda, {user.get('nome', 'Usuária')}!")
+                st.session_state.usuario = usuario
+                st.success(f"Bem-vinda, {usuario.get('nome')}!")
                 st.rerun()
             else:
                 st.error("E-mail ou senha incorretos.")
 
-    with aba_cadastro:
-        nome_input = st.text_input("Nome", key="reg_nome")
-        email_input = st.text_input("E-mail", key="reg_email")
-        senha_input = st.text_input("Defina uma Senha", type="password", key="reg_senha")
+    with tab_up:
+        n_input = st.text_input("Nome", key="r_n")
+        e_input = st.text_input("E-mail", key="r_e")
+        s_input = st.text_input("Defina uma Senha", type="password", key="r_s")
         
         if st.button("Finalizar Cadastro 🚀", use_container_width=True):
-            if nome_input and email_input and senha_input:
-                if cadastrar_usuario(nome_input, email_input, senha_input):
-                    st.success("✅ Cadastro realizado! Agora você pode fazer login.")
+            if n_input and e_input and s_input:
+                if cadastrar_usuario(n_input, e_input, s_input):
+                    st.balloons()
+                    st.success("✅ Cadastro realizado com sucesso! Vá para a aba 'Entrar'.")
             else:
                 st.warning("Preencha todos os campos.")
