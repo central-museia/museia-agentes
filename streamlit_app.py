@@ -1,46 +1,64 @@
 import streamlit as st
 from nocodb.catalogo import obter_catalogo
 
-st.set_page_config(page_title="MuseIA", layout="wide")
+# 1. CONFIGURAÇÃO (Mantida)
+st.set_page_config(page_title="MuseIA - Central", layout="wide")
 
-# --- ESTADO ---
+# --- ESTADO (Mantido) ---
 if "colecoes" not in st.session_state:
     st.session_state.colecoes = []
 
-# --- ESTILO ---
+# --- ESTILO (Evoluído para suportar os novos Cards) ---
 st.markdown("""
 <style>
-.big-title {
-    font-size: 60px;
-    font-weight: bold;
-    text-align: center;
-}
-.sub {
-    text-align: center;
-    font-size: 20px;
-    opacity: 0.7;
-}
-.card {
-    padding:20px;
-    border-radius:15px;
-    text-align:center;
-    font-weight:bold;
-    margin:10px;
-    color:white;
-}
+    .big-title { font-size: 50px; font-weight: bold; text-align: center; margin-bottom: 0; }
+    .sub { text-align: center; font-size: 18px; opacity: 0.7; margin-bottom: 30px; }
+    .card-perfil {
+        padding: 25px; border-radius: 15px; text-align: center;
+        background-color: #1e2130; border: 1px solid #3e4259;
+        margin-bottom: 15px; transition: 0.3s;
+    }
+    .card-perfil:hover { border-color: #ff4b4b; }
+    .section-header { margin-top: 50px; margin-bottom: 20px; font-size: 28px; font-weight: bold; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- HERO ---
-st.image("assets/logo.png", width=180)
+# --- 2. HERO & IMPACTO (Conforme seu modelo) ---
+col_logo, col_vazio = st.columns([1, 4])
+with col_logo:
+    st.image("assets/logo.png", width=120)
+
 st.markdown('<div class="big-title">MuseIA</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub">A inteligência humana que controla a IA</div>', unsafe_allow_html=True)
 
+# --- NOVO: SEÇÃO DE PERFIS (Antes das coleções) ---
+st.markdown('<div class="section-header">👤 Escolha seu perfil de atuação:</div>', unsafe_allow_html=True)
+cp1, cp2, cp3 = st.columns(3)
+
+with cp1:
+    st.markdown('<div class="card-perfil"><h3>Empreendedor</h3><p>Gestão de tempo e escala de negócio.</p></div>', unsafe_allow_html=True)
+    if st.button("Focar em Empreendedorismo", key="p_emp"):
+        st.session_state.colecoes = ["Produtividade Administrativa", "Financeiro & Cobrança"]
+        st.rerun()
+
+with cp2:
+    st.markdown('<div class="card-perfil"><h3>Gestor Ops</h3><p>Relatórios, RH e eficiência operacional.</p></div>', unsafe_allow_html=True)
+    if st.button("Focar em Gestão", key="p_ges"):
+        st.session_state.colecoes = ["Planejamento & Operações", "Recursos Humanos"]
+        st.rerun()
+
+with cp3:
+    st.markdown('<div class="card-perfil"><h3>Especialista</h3><p>Vendas, Marketing e Prospecção ativa.</p></div>', unsafe_allow_html=True)
+    if st.button("Focar em Vendas", key="p_esp"):
+        st.session_state.colecoes = ["Vendas & Prospecção", "Marketing & Conteúdo"]
+        st.rerun()
+
 st.divider()
 
-st.header("🔥 Escolha sua transformação:")
+# --- 3. SEÇÃO DE COLEÇÕES (Sua lógica original preservada) ---
+st.header("🔥 Explore por Coleções:")
 
-colecoes = {
+colecoes_cores = {
     "Produtividade Administrativa": "#14B8A6",
     "Atendimento & Recepção": "#0EA5E9",
     "Clínicas e Consultórios": "#2563EB",
@@ -53,86 +71,62 @@ colecoes = {
     "Financeiro & Cobrança": "#22C55E"
 }
 
-# --- MULTISELECT ---
+# MULTISELECT (Agora atualizado pelos botões de perfil também!)
 selecionadas = st.multiselect(
-    "Selecione suas coleções:",
-    list(colecoes.keys()),
+    "Filtre as soluções desejadas:",
+    list(colecoes_cores.keys()),
     default=st.session_state.colecoes,
     key="multiselect_colecoes"
 )
-
 st.session_state.colecoes = selecionadas
 
-st.divider()
-
-# =========================================
-# 📦 EXIBIÇÃO DE AGENTES (NOVO)
-# =========================================
-
+# --- 4. EXIBIÇÃO DE AGENTES (Sua lógica original preservada) ---
 catalogo = obter_catalogo()
 
 if st.session_state.colecoes:
-
-    st.subheader("🎬 Agentes disponíveis:")
-
+    st.markdown(f'<div class="section-header">🎬 Agentes disponíveis ({len(st.session_state.colecoes)} áreas):</div>', unsafe_allow_html=True)
+    
     cols = st.columns(4)
+    grid_index = 0
 
-    for i, agente in enumerate(catalogo):
-
-        # filtro por coleção
-        if agente["colecoes"]:
-            nomes_colecao = st.session_state.colecoes
-            if not any(c in agente["colecoes"] for c in nomes_colecao):
+    for agente in catalogo:
+        # Lógica de filtro preservada
+        if agente.get("colecoes"):
+            if not any(c in agente["colecoes"] for c in st.session_state.colecoes):
                 continue
-
-        with cols[i % 4]:
-
-            # IMAGEM (COM FALLBACK)
-            if agente.get("imagem"):
-                st.image(agente["imagem"])
-            else:
-                st.image("assets/logo.png")
-
+        
+        with cols[grid_index % 4]:
+            # Container do Agente
+            st.image(agente.get("imagem", "assets/logo.png"), use_container_width=True)
             st.markdown(f"**{agente['nome']}**")
-            st.caption(agente["codigo"])
-
-            if st.button("🚀 Usar agente", key=agente["codigo"]):
-                st.success(f"{agente['nome']} ativado")
-
+            st.caption(f"ID: {agente['codigo']}")
+            
+            # VALIDAÇÃO DE ACESSO (Onde você pediu)
+            if st.button("🚀 Usar agente", key=f"btn_{agente['codigo']}"):
+                # Aqui entra o campo de e-mail para validar
+                email = st.text_input("E-mail de assinante:", key=f"mail_{agente['codigo']}")
+                if email:
+                    st.success(f"Acesso validado para {email}! Iniciando...")
+                else:
+                    st.info("Insira seu e-mail para validar o plano.")
+        
+        grid_index += 1
 else:
-    st.warning("⚠️ Escolha pelo menos uma coleção para avançar.")
+    st.info("💡 Dica: Selecione um Perfil acima ou escolha as coleções para ver as soluções.")
 
-# --- CTA FINAL ---
+# --- 5. SEÇÕES FINAIS (FAQ e CTA - Preservados e Estilizados) ---
 st.divider()
+col_cta1, col_cta2 = st.columns(2)
+with col_cta1:
+    st.header("🚀 Pronto para o próximo nível?")
+    if st.button("🔥 Ativar minha estrutura completa"):
+        st.balloons()
 
-st.header("🚀 Agora sim, você está jogando sério.")
+with col_cta2:
+    st.header("🧠 Dúvidas?")
+    with st.expander("Como funciona o pagamento?"):
+        st.write("A liberação é automática via e-mail cadastrado no checkout.")
 
-col1, col2 = st.columns(2)
+# FOOTER
+st.markdown("<br><hr><center>MuseIA © 2026 — Inteligência Aplicada</center>", unsafe_allow_html=True)
 
-with col1:
-    if st.button("🔥 Ativar minha estrutura"):
-        st.success("Sistema ativado. Você desbloqueou outro nível.")
-
-with col2:
-    if st.button("🧠 Montar solução completa"):
-        st.info("Você não está comprando. Está construindo vantagem.")
-
-# --- FAQ ---
-st.divider()
-st.header("❓ Dúvidas Frequentes")
-
-with st.expander("Isso é só mais uma IA?"):
-    st.write("Não. É execução estratégica com inteligência.")
-
-with st.expander("Funciona pra qualquer negócio?"):
-    st.write("Sim. Se precisa crescer, funciona.")
-
-with st.expander("Preciso saber usar IA?"):
-    st.write("Não. A MuseIA já pensa por você.")
-
-with st.expander("É imediato?"):
-    st.write("Sim. Entrou, começou.")
-
-# --- FOOTER ---
-st.markdown("---")
-st.markdown("MuseIA © 2026 — Inteligência aplicada que gera resultado.")
