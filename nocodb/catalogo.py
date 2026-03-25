@@ -5,6 +5,7 @@ from logger_museia import registrar_falha
 
 # 1. Configuração Centralizada de Headers
 def obter_headers():
+    import streamlit as st
     return {
         "xc-token": st.secrets["nocodb"]["api_key"],
         "Content-Type": "application/json"
