@@ -1,48 +1,49 @@
 import streamlit as st
-import requests
-from nocodb.catalogo import obter_headers
+from supabase.cliente_auth import validar_login
 
-def cadastrar_usuario(nome, email, senha):
-    try:
-        url = st.secrets['nocodb']['url_usuarios']
-        payload = {"nome": nome, "email": email, "senha": senha}
-        response = requests.post(url, headers=obter_headers(), json=payload, timeout=10)
-        return response.status_code in [200, 201]
-    except:
-        return False
+def inicializar_sessao():
+    """Define o estado inicial. Se não houver usuário, é um 'Visitante'."""
+    if "logado" not in st.session_state:
+        st.session_state.logado = False
+    if "usuario" not in st.session_state:
+        st.session_state.usuario = None
 
-def validar_login(email, senha):
-    try:
-        url = st.secrets['nocodb']['url_usuarios']
-        params = {"where": f"(email,eq,{email})"}
-        response = requests.get(url, headers=obter_headers(), params=params, timeout=10)
-        data = response.json()
-        records = data.get("list") or data.get("records") or []
-        if records:
-            user = records[0]
-            if str(user.get("senha")) == str(senha):
-                return user
-        return None
-    except:
-        return None
-
-def renderizar_interface_login():
-    st.markdown("#### 🔐 Acesso MuseIA")
-    t1, t2 = st.tabs(["Entrar", "Cadastrar"])
-    with t1:
-        e = st.text_input("E-mail", key="l_e")
-        s = st.text_input("Senha", type="password", key="l_s")
-        if st.button("Confirmar Login"):
-            u = validar_login(e, s)
-            if u:
-                st.session_state.logado = True
-                st.session_state.usuario = u
+def login_ui():
+    """Interface de login lateral ou central, sem travar o app."""
+    with st.sidebar:
+        if not st.session_state.logado:
+            st.markdown("### 🔐 Área do Assinante")
+            email = st.text_input("E-mail").strip().lower()
+            senha = st.text_input("Senha", type="password")
+            
+            if st.button("Entrar na MuseIA"):
+                usuario = validar_login(email, senha)
+                if usuario:
+                    st.session_state.logado = True
+                    st.session_state.usuario = usuario
+                    st.success(f"Olá, {usuario['nome']}!")
+                    st.rerun()
+                else:
+                    st.error("E-mail ou senha inválidos.")
+        else:
+            st.write(f"👤 {st.session_state.usuario['nome']}")
+            if st.button("Sair"):
+                st.session_state.clear()
                 st.rerun()
-            else: st.error("Dados incorretos.")
-    with t2:
-        n = st.text_input("Nome", key="r_n")
-        em = st.text_input("E-mail", key="r_e")
-        se = st.text_input("Senha", type="password", key="r_s")
-        if st.button("Criar Conta"):
-            if cadastrar_usuario(n, em, se):
-                st.success("Sucesso! Vá em 'Entrar'.")
+
+def pode_utilizar():
+    """
+    Função global para ser usada antes de rodar qualquer Agente.
+    Exemplo: if pode_utilizar(): rodar_agente()
+    """
+    from core.pagamentos import verificar_status_pagamento, exibir_aviso_bloqueio
+    
+    if not st.session_state.logado:
+        st.error("Você precisa estar logado para usar os agentes.")
+        return False
+        
+    if verificar_status_pagamento(st.session_state.usuario):
+        return True
+    else:
+        exibir_aviso_bloqueio()
+        return False
