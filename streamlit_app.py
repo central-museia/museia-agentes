@@ -12,7 +12,7 @@ if _root_dir not in sys.path:
 # Importações ÚNICAS dos nossos módulos
 try:
     # Bases e Segurança
-    from supabase.catalogo import obter_catalogo, obter_perfis
+    from database.catalogo import obter_catalogo, obter_perfis
     from auth.auth_museia import inicializar_sessao, login_ui, pode_utilizar
     from logger_museia import registrar_falha, exibir_painel_debug
     

@@ -1,5 +1,5 @@
 import streamlit as st
-from supabase.cliente_auth import validar_login
+from database.cliente_auth import validar_login
 
 def inicializar_sessao():
     """Define o estado inicial. Se não houver usuário, é um 'Visitante'."""

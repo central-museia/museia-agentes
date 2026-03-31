@@ -1,5 +1,6 @@
-from supabase import create_client
+import os
 import streamlit as st
+from database import create_client as supabase_create_client
 
 def get_client():
     """Cria e retorna o cliente oficial do Supabase usando secrets seguros."""

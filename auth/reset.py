@@ -1,5 +1,5 @@
 import streamlit as st
-from supabase.cliente import get_client
+from database.cliente import get_client
 
 def recuperar_senha_ui():
     """Interface para solicitar recuperação de acesso."""
