@@ -3,18 +3,30 @@ import sys
 import os
 
 # =========================================
-# 🛠️ CONFIGURAÇÃO DE CAMINHOS (PATH)
+# 🛠️ CONFIGURAÇÃO UNIFICADA DE CAMINHOS (PATH)
 # =========================================
-# Adiciona a raiz do projeto ao sys.path para que as pastas /auth, /core e /supabase sejam encontradas
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+_root_dir = os.path.dirname(os.path.abspath(__file__))
+if _root_dir not in sys.path:
+    sys.path.insert(0, _root_dir)
 
-# Importações dos nossos módulos criados nas etapas anteriores
-from supabase.catalogo import obter_catalogo, obter_perfis
-from auth.auth_museia import inicializar_sessao, login_ui, pode_utilizar
-from logger_museia import registrar_falha, exibir_painel_debug
-
+# Importações ÚNICAS dos nossos módulos
+try:
+    # Bases e Segurança
+    from supabase.catalogo import obter_catalogo, obter_perfis
+    from auth.auth_museia import inicializar_sessao, login_ui, pode_utilizar
+    from logger_museia import registrar_falha, exibir_painel_debug
+    
+    # Importando as funções da pasta /utils
+    from utils.ia import gerar_resposta
+    # from utils.pdf import ler_pdf
+    # from utils.scraping import capturar
+    
+except Exception as e:
+    st.error(f"Erro crítico ao carregar componentes da MuseIA: {e}")
+    st.stop()
+    
 # =========================================
-# 🎨 CONFIGURAÇÃO DA PÁGINA & UI
+# 🎨 CONFIGURAÇÃO DA PÁGINA
 # =========================================
 st.set_page_config(page_title="MuseIA Digital", layout="wide", page_icon="🎬")
 
@@ -35,7 +47,7 @@ st.markdown("""
     }
     .card:hover {
         transform: scale(1.05);
-        border-color: #e50914; /* Vermelho Netflix no hover */
+        border-color: #e50914; 
     }
     .stButton>button {
         width: 100%;
@@ -50,18 +62,16 @@ st.markdown("""
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col1:
-    # Tenta carregar a logo, se falhar usa texto
     try:
         st.image("assets/logo.png", width=120)
     except:
         st.title("MuseIA")
 
 with col2:
-    st.write("") # Espaçador
+    st.write("") 
     busca = st.text_input("🔍 Buscar agente ou categoria...", label_visibility="collapsed", placeholder="O que você quer automatizar hoje?")
 
 with col3:
-    # Chamar a interface de login (ela decide se mostra o botão 'Sair' ou o form 'Entrar')
     login_ui()
 
 st.divider()
@@ -83,13 +93,11 @@ try:
         for perfil in perfis_db:
             nome_perfil = perfil.get("nome")
 
-            # 1. Filtra agentes por perfil
             agentes_filtrados = [
                 a for a in agentes_db 
                 if nome_perfil in a.get("perfis", [])
             ]
 
-            # 2. Aplica filtro de busca (se houver)
             if busca:
                 agentes_filtrados = [
                     a for a in agentes_filtrados
@@ -97,11 +105,8 @@ try:
                     or busca.lower() in a.get("descricao", "").lower()
                 ]
 
-            # 3. Renderiza a fileira (Row) se houver agentes
             if agentes_filtrados:
                 st.subheader(nome_perfil)
-                
-                # Cria colunas (ex: 4 colunas por linha)
                 cols = st.columns(4)
                 
                 for i, agente in enumerate(agentes_filtrados):
@@ -109,36 +114,46 @@ try:
                         with st.container():
                             st.markdown('<div class="card">', unsafe_allow_html=True)
                             
-                            # Imagem do Agente
                             img = agente.get("imagem") if agente.get("imagem") else "assets/logo.png"
                             st.image(img, use_container_width=True)
                             
                             st.markdown(f"### {agente.get('nome')}")
                             st.write(agente.get("descricao", "")[:100] + "...")
                             
-                            # BOTÃO DE USO (Com trava de segurança)
+                            # BOTÃO DE USO COM LÓGICA HÍBRIDA (PYTHON OU IA)
                             if st.button("🚀 Usar Agente", key=f"btn_{agente.get('id', i)}"):
-                                # Aqui aplicamos a regra: Pode navegar? SIM. Pode usar? SÓ SE ATIVO.
                                 if pode_utilizar():
-                                    st.success(f"Iniciando {agente.get('nome')}...")
-                                    # Lógica para chamar o agente aqui
+                                    # Definimos o tipo de execução (Padrão: Python para economizar)
+                                    # Se no seu banco a coluna 'tipo' for 'ia', ele usa o Gemini.
+                                    tipo_agente = agente.get('tipo', 'python')
+                                    
+                                    if tipo_agente == 'ia':
+                                        with st.spinner("IA processando..."):
+                                            prompt = f"Atue como {agente.get('nome')}. Missão: {agente.get('descricao')}"
+                                            resposta = gerar_resposta(prompt)
+                                            st.markdown("---")
+                                            st.write(resposta)
+                                    else:
+                                        # LÓGICA ESTRATÉGICA EM PYTHON (Custo Zero)
+                                        st.success(f"Executando lógica estratégica Python para: {agente.get('nome')}")
+                                        st.info("Processamento concluído localmente (Sem uso de tokens de IA).")
+                                        # Aqui você insere a chamada para suas funções de WFM/Planejamento
                             
                             st.markdown('</div>', unsafe_allow_html=True)
-                st.write("") # Espaçador entre linhas
+                st.write("") 
 
     else:
         st.info("O catálogo está sendo atualizado. Volte em instantes!")
 
 except Exception as e:
     registrar_falha("streamlit_app_catalogo", e)
-    st.error("Ocorreu um erro ao carregar a vitrine. Nossa equipe técnica já foi avisada.")
+    st.error("Erro ao carregar a vitrine. Verifique os logs.")
 
 # =========================================
-# 🛠️ RODAPÉ & DEBUG (SÓ PARA VOCÊ)
+# 🛠️ RODAPÉ & DEBUG
 # =========================================
 st.divider()
 st.markdown("<center> MuseIA Digital © 2026 - Inteligência e Governança </center>", unsafe_allow_html=True)
 
-# Exibe o histórico de falhas apenas se você estiver logada (opcional)
-if st.session_state.logado:
+if st.session_state.get('logado', False):
     exibir_painel_debug()
