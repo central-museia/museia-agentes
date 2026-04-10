@@ -1,5 +1,13 @@
 import streamlit as st
-from database.cliente_auth import validar_login
+from database.cliente import validar_login
+
+def exibir_saudacao():
+    """Exibe o nome do usuário no topo da página se ele estiver logado."""
+    if st.session_state.get("logado") and st.session_state.get("usuario"):
+        nome = st.session_state.usuario.get('nome', '').split()[0] # Pega só o primeiro nome
+        st.markdown(f"### Bem-vinda de volta, **{nome}**! ✨")
+    else:
+        st.markdown("### Bem-vinda à **MuseIA Digital**")
 
 def inicializar_sessao():
     """Define o estado inicial. Se não houver usuário, é um 'Visitante'."""

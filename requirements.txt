@@ -5,3 +5,8 @@ beautifulsoup4
 pdfplumber
 google-generativeai
 supabase
+bcrypt
+huggingface
+python-dotenv
+mercadopago
+MP_ACCESS_TOKEN
