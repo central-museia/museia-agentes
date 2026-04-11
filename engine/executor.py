@@ -1,5 +1,6 @@
 from engine.input_handler import tratar_input
 from engine.ai_handler import executar_ia
+from engine.processadores import executar_logica_python
 
 def executar_agente(agente, input_data, contexto_extra=None):
     """

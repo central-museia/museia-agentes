@@ -20,11 +20,24 @@ with aba_login:
         if btn_login:
             user = validar_login(email, senha)
             if user:
+                # 1. Salva os dados na sessão
                 st.session_state.logado = True
                 st.session_state.usuario = user
                 st.success(f"Bem-vinda, {user.get('nome')}!")
                 time.sleep(1)
-                st.switch_page("streamlit_app.py")
+                
+                # 2. LÓGICA DE REDIRECIONAMENTO (DENTRO DO SUCESSO DO LOGIN)
+                pagina_retorno = st.session_state.get("origem")
+
+                if pagina_retorno:
+                    st.session_state.origem = None # Limpa o rastro
+                    try:
+                        st.switch_page(pagina_retorno)
+                    except:
+                        st.switch_page("pages/_agente.py")
+                else:
+                    # Se não veio de um agente específico, vai para a vitrine
+                    st.switch_page("pages/agentes.py")
             else:
                 st.error("E-mail ou senha incorretos.")
 

@@ -11,7 +11,12 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
-st.set_page_config(page_title="MuseIA Digital", layout="wide")
+# A configuração correta que não quebra o site:
+st.set_page_config(
+    page_title="MuseIA Digital", 
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
 
 # 2. SESSION (Inicialização garantida)
 for key, val in {
@@ -126,7 +131,7 @@ if st.session_state.get("reset_filtros"):
 # =========================================
 # PERFIS (Ajustado para limpar coleções ao clicar)
 # =========================================
-st.markdown("## 👤 Perfis")
+st.markdown("## 👤 Perfil")
 if perfis_db:
     cols = st.columns(min(len(perfis_db), 6))
     for i, perfil in enumerate(perfis_db):
